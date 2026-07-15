@@ -166,12 +166,10 @@ function ReproductorAudio({ src }) {
 
   return (
     <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#241B0E" }}>
-      <audio ref={audioRef} src={src} preload="metadata" />
+      <audio ref={audioRef} src={src} preload="auto" />
       {error ? (
         <a
           href={src}
-          target="_blank"
-          rel="noreferrer"
           className="flex-1 text-[11px] underline text-center py-2"
           style={{ color: "#E8A33D" }}
         >
@@ -283,12 +281,14 @@ function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
             Devocional del día
           </h1>
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <Flama racha={racha} />
-          <span className="text-[11px]" style={{ color: "#E8A33D" }}>
-            {racha} días
-          </span>
-        </div>
+        {racha > 0 && (
+          <div className="flex flex-col items-center gap-1">
+            <Flama racha={racha} />
+            <span className="text-[11px]" style={{ color: "#E8A33D" }}>
+              {racha} día{racha > 1 ? "s" : ""}
+            </span>
+          </div>
+        )}
       </div>
 
       <div
