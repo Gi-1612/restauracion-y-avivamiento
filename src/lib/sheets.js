@@ -1,4 +1,4 @@
-jsimport Papa from "papaparse";
+import Papa from "papaparse";
 
 const MESES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -15,14 +15,28 @@ export async function fetchSheet(url) {
     if (!res.ok) return null;
     const texto = await res.text();
     const parseado = Papa.parse(texto, { header: true, skipEmptyLines: true });
-    return parseado.data;
+    // Google Forms a veces agrega espacios extra al final de los títulos de columna
+    // (ej: "Tema " en vez de "Tema"). Los recortamos para que no rompa la lectura.
+    const filas = parseado.data.map((fila) => {
+      const limpia = {};
+      Object.keys(fila).forEach((clave) => {
+        limpia[clave.trim()] = fila[clave];
+      });
+      return limpia;
+    });
+    return filas;
   } catch (e) {
     console.error("No se pudo cargar la planilla:", e);
     return null;
   }
 }
 
-/** Admite "14/07/2026" o "2026-07-14". Devuelve un Date o null. */
+const NOMBRES_MES_ES = {
+  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+  julio: 6, agosto: 7, septiembre: 8, setiembre: 8, octubre: 9, noviembre: 10, diciembre: 11,
+};
+
+/** Admite "14/07/2026", "2026-07-14", o el formato largo de Google Forms "Miércoles 15 de Julio 2026". */
 export function parseFecha(fechaStr) {
   if (!fechaStr) return null;
   let d;
@@ -31,7 +45,16 @@ export function parseFecha(fechaStr) {
     const [dd, mm, yyyy] = partes;
     d = new Date(yyyy, (mm || 1) - 1, dd || 1);
   } else {
-    d = new Date(fechaStr);
+    const match = fechaStr
+      .toLowerCase()
+      .match(/(\d{1,2})\s+de\s+([a-záéíóúñ]+)\s+(?:de\s+)?(\d{4})/i);
+    if (match) {
+      const [, dia, mesNombre, anio] = match;
+      const mesIndex = NOMBRES_MES_ES[mesNombre];
+      d = mesIndex !== undefined ? new Date(parseInt(anio, 10), mesIndex, parseInt(dia, 10)) : new Date(fechaStr);
+    } else {
+      d = new Date(fechaStr);
+    }
   }
   return isNaN(d.getTime()) ? null : d;
 }
