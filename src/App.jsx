@@ -19,7 +19,7 @@ import {
   MessageCircle,
   Link as LinkIcon,
 } from "lucide-react";
-import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy } from "./lib/sheets";
+import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy, cargarRacha, alternarLecturaDeHoy } from "./lib/sheets";
 
 const LOGO_IGLESIA = "/logo.png";
 
@@ -114,8 +114,10 @@ function ReproductorAudio({ src }) {
   const [reproduciendo, setReproduciendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
   const [duracion, setDuracion] = useState(0);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    setError(false);
     const audio = audioRef.current;
     if (!audio) return;
     const onTime = () => setProgreso(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
@@ -126,25 +128,31 @@ function ReproductorAudio({ src }) {
       setReproduciendo(false);
       setProgreso(0);
     };
+    const onError = () => setError(true);
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onLoaded);
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnded);
+    audio.addEventListener("error", onError);
     return () => {
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onLoaded);
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("error", onError);
     };
   }, [src]);
 
   const alternar = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (reproduciendo) audio.pause();
-    else audio.play().catch(() => {});
+    if (reproduciendo) {
+      audio.pause();
+    } else {
+      audio.play().catch(() => setError(true));
+    }
   };
 
   const formatoTiempo = (segundos) => {
@@ -159,34 +167,48 @@ function ReproductorAudio({ src }) {
   return (
     <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#241B0E" }}>
       <audio ref={audioRef} src={src} preload="metadata" />
-      <button
-        onClick={alternar}
-        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-        style={{ backgroundColor: "#E8A33D" }}
-        aria-label={reproduciendo ? "Pausar audio" : "Reproducir audio"}
-      >
-        {reproduciendo ? (
-          <Pause size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
-        ) : (
-          <Play size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
-        )}
-      </button>
-      <div className="flex-1">
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(232,163,61,0.2)" }}>
-          <div
-            className="h-full rounded-full transition-all"
-            style={{ width: `${progreso}%`, backgroundColor: "#E8A33D" }}
-          />
-        </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-[10px]" style={{ color: "#C9B892" }}>
-            Audio del devocional
-          </span>
-          <span className="text-[10px]" style={{ color: "#C9B892" }}>
-            {formatoTiempo(duracion)}
-          </span>
-        </div>
-      </div>
+      {error ? (
+        <a
+          href={src}
+          target="_blank"
+          rel="noreferrer"
+          className="flex-1 text-[11px] underline text-center py-2"
+          style={{ color: "#E8A33D" }}
+        >
+          No se pudo reproducir acá — tocá para escuchar el audio directo
+        </a>
+      ) : (
+        <>
+          <button
+            onClick={alternar}
+            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+            style={{ backgroundColor: "#E8A33D" }}
+            aria-label={reproduciendo ? "Pausar audio" : "Reproducir audio"}
+          >
+            {reproduciendo ? (
+              <Pause size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
+            ) : (
+              <Play size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
+            )}
+          </button>
+          <div className="flex-1">
+            <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(232,163,61,0.2)" }}>
+              <div
+                className="h-full rounded-full transition-all"
+                style={{ width: `${progreso}%`, backgroundColor: "#E8A33D" }}
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span className="text-[10px]" style={{ color: "#C9B892" }}>
+                Audio del devocional
+              </span>
+              <span className="text-[10px]" style={{ color: "#C9B892" }}>
+                {formatoTiempo(duracion)}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -592,7 +614,7 @@ function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
 export default function AppRestauracion() {
   const [tab, setTab] = useState("inicio");
   const [leido, setLeido] = useState(false);
-  const [racha, setRacha] = useState(6);
+  const [racha, setRacha] = useState(0);
   const [devocional, setDevocional] = useState(DEVOCIONAL_EJEMPLO);
   const [historial, setHistorial] = useState(HISTORIAL_EJEMPLO);
   const [reuniones, setReuniones] = useState(REUNIONES_EJEMPLO);
@@ -600,6 +622,12 @@ export default function AppRestauracion() {
   const [usandoEjemplo, setUsandoEjemplo] = useState(true);
   const [esAdmin, setEsAdmin] = useState(false);
   const [mostrarForm, setMostrarForm] = useState(false);
+
+  useEffect(() => {
+    const { racha: r, leidoHoy } = cargarRacha();
+    setRacha(r);
+    setLeido(leidoHoy);
+  }, []);
 
   useEffect(() => {
     let activo = true;
@@ -644,9 +672,9 @@ export default function AppRestauracion() {
   }, []);
 
   const marcarLeido = () => {
-    if (!leido) setRacha(racha + 1);
-    else setRacha(Math.max(racha - 1, 0));
-    setLeido(!leido);
+    const { racha: nuevaRacha, leidoHoy } = alternarLecturaDeHoy(racha, leido);
+    setRacha(nuevaRacha);
+    setLeido(leidoHoy);
   };
 
   const toggleRecordar = (id) => {
@@ -672,10 +700,7 @@ export default function AppRestauracion() {
         style={{ backgroundColor: "#12151C", borderColor: "#000000" }}
       >
         {/* barra superior */}
-        <div className="flex items-center justify-between px-5 pt-3 pb-1">
-          <span className="text-[11px] font-medium" style={{ color: "#F2ECDD" }}>
-            9:41
-          </span>
+        <div className="flex items-center justify-end px-5 pt-3 pb-1">
           <button
             onClick={() => setEsAdmin(!esAdmin)}
             className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full"
