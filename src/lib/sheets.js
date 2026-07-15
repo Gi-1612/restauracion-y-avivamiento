@@ -143,3 +143,47 @@ export function elegirDevocionalDeHoy(devocionales) {
   if (pasados.length) return pasados[0];
   return devocionales[0] || null;
 }
+
+const CLAVE_RACHA = "restauracion-racha-lectura";
+
+function hoyISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function ayerISO() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+/** Lee la racha guardada en este celular/navegador y si ya se marcó como leído hoy. */
+export function cargarRacha() {
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CLAVE_RACHA) || "null");
+    if (!guardado) return { racha: 0, leidoHoy: false };
+    return { racha: guardado.racha || 0, leidoHoy: guardado.ultimaLectura === hoyISO() };
+  } catch {
+    return { racha: 0, leidoHoy: false };
+  }
+}
+
+/** Alterna el estado de "leído" de hoy y devuelve la nueva racha calculada. */
+export function alternarLecturaDeHoy(rachaActual, leidoActualmente) {
+  if (leidoActualmente) {
+    const nuevaRacha = Math.max(rachaActual - 1, 0);
+    try {
+      localStorage.setItem(CLAVE_RACHA, JSON.stringify({ racha: nuevaRacha, ultimaLectura: null }));
+    } catch {}
+    return { racha: nuevaRacha, leidoHoy: false };
+  }
+  let guardado = null;
+  try {
+    guardado = JSON.parse(localStorage.getItem(CLAVE_RACHA) || "null");
+  } catch {}
+  const continuaRacha = guardado && guardado.ultimaLectura === ayerISO();
+  const nuevaRacha = continuaRacha ? (guardado.racha || 0) + 1 : 1;
+  try {
+    localStorage.setItem(CLAVE_RACHA, JSON.stringify({ racha: nuevaRacha, ultimaLectura: hoyISO() }));
+  } catch {}
+  return { racha: nuevaRacha, leidoHoy: true };
+}
