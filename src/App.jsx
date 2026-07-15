@@ -19,22 +19,24 @@ import {
   MessageCircle,
   Link as LinkIcon,
 } from "lucide-react";
+import { CSV_DEVOCIONALES, CSV_REUNIONES, CSV_NOVEDADES } from "./config";
+import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy } from "./lib/sheets";
 
 const LOGO_IGLESIA = "/logo.png";
 
-const HISTORIAL_DEVOCIONALES = [
-  { id: 1, fecha: "13 jul", mes: "Julio", tema: "Perseverancia", referencia: "Juan 15:5", titulo: "Permanecer en la Vid", versiculo: "\u201cYo soy la vid, vosotros los pámpanos…\u201d", extracto: "El fruto llega como consecuencia de permanecer conectados, no del esfuerzo aislado." },
-  { id: 2, fecha: "12 jul", mes: "Julio", tema: "Perseverancia", referencia: "Hebreos 10:36", titulo: "La Paciencia que Sostiene", versiculo: "\u201cVosotros tenéis necesidad de paciencia…\u201d", extracto: "La promesa se recibe después de haber hecho la voluntad de Dios, no antes." },
-  { id: 3, fecha: "10 jul", mes: "Julio", tema: "Fe", referencia: "Marcos 11:24", titulo: "Pedir Creyendo", versiculo: "\u201cTodo lo que pidiereis orando, creed que lo recibiréis…\u201d", extracto: "La fe no es negar la dificultad, es confiar en Quién la puede resolver." },
-  { id: 4, fecha: "8 jul", mes: "Julio", tema: "Restauración", referencia: "Joel 2:25", titulo: "Los Años que la Oruga Comió", versiculo: "\u201cY os restituiré los años que comió la oruga…\u201d", extracto: "Dios no solo perdona: también restaura lo que el tiempo perdido se llevó." },
-  { id: 5, fecha: "29 jun", mes: "Junio", tema: "Gracia", referencia: "Efesios 2:8", titulo: "Salvos por Gracia", versiculo: "\u201cPorque por gracia sois salvos, por medio de la fe…\u201d", extracto: "No hay mérito propio que alcance: todo es don, y eso nos libera." },
-  { id: 6, fecha: "22 jun", mes: "Junio", tema: "Fe", referencia: "Hebreos 11:1", titulo: "La Certeza de lo que se Espera", versiculo: "\u201cEs, pues, la fe la certeza de lo que se espera…\u201d", extracto: "Creer no es ver primero: es sostenerse en lo que Dios ya prometió." },
-  { id: 7, fecha: "15 jun", mes: "Junio", tema: "Restauración", referencia: "Isaías 61:3", titulo: "Gloria en Vez de Ceniza", versiculo: "\u201c…para ordenar que a los afligidos de Sion se les dé gloria en lugar de ceniza…\u201d", extracto: "Donde hubo pérdida, Dios promete un intercambio: belleza a cambio de ceniza." },
-  { id: 8, fecha: "8 jun", mes: "Junio", tema: "Gracia", referencia: "2 Corintios 12:9", titulo: "Poder en la Debilidad", versiculo: "\u201cBástate mi gracia; porque mi poder se perfecciona en la debilidad…\u201d", extracto: "La debilidad no es un obstáculo para Dios: es el lugar donde su poder se nota más." },
+const HISTORIAL_EJEMPLO = [
+  { id: 1, fecha: "13 jul", fechaLabel: "13 jul", mes: "Julio", tema: "Perseverancia", referencia: "Juan 15:5", titulo: "Permanecer en la Vid", versiculo: "\u201cYo soy la vid, vosotros los pámpanos…\u201d", extracto: "El fruto llega como consecuencia de permanecer conectados, no del esfuerzo aislado." },
+  { id: 2, fecha: "12 jul", fechaLabel: "12 jul", mes: "Julio", tema: "Perseverancia", referencia: "Hebreos 10:36", titulo: "La Paciencia que Sostiene", versiculo: "\u201cVosotros tenéis necesidad de paciencia…\u201d", extracto: "La promesa se recibe después de haber hecho la voluntad de Dios, no antes." },
+  { id: 3, fecha: "10 jul", fechaLabel: "10 jul", mes: "Julio", tema: "Fe", referencia: "Marcos 11:24", titulo: "Pedir Creyendo", versiculo: "\u201cTodo lo que pidiereis orando, creed que lo recibiréis…\u201d", extracto: "La fe no es negar la dificultad, es confiar en Quién la puede resolver." },
+  { id: 4, fecha: "8 jul", fechaLabel: "8 jul", mes: "Julio", tema: "Restauración", referencia: "Joel 2:25", titulo: "Los Años que la Oruga Comió", versiculo: "\u201cY os restituiré los años que comió la oruga…\u201d", extracto: "Dios no solo perdona: también restaura lo que el tiempo perdido se llevó." },
+  { id: 5, fecha: "29 jun", fechaLabel: "29 jun", mes: "Junio", tema: "Gracia", referencia: "Efesios 2:8", titulo: "Salvos por Gracia", versiculo: "\u201cPorque por gracia sois salvos, por medio de la fe…\u201d", extracto: "No hay mérito propio que alcance: todo es don, y eso nos libera." },
+  { id: 6, fecha: "22 jun", fechaLabel: "22 jun", mes: "Junio", tema: "Fe", referencia: "Hebreos 11:1", titulo: "La Certeza de lo que se Espera", versiculo: "\u201cEs, pues, la fe la certeza de lo que se espera…\u201d", extracto: "Creer no es ver primero: es sostenerse en lo que Dios ya prometió." },
+  { id: 7, fecha: "15 jun", fechaLabel: "15 jun", mes: "Junio", tema: "Restauración", referencia: "Isaías 61:3", titulo: "Gloria en Vez de Ceniza", versiculo: "\u201c…para ordenar que a los afligidos de Sion se les dé gloria en lugar de ceniza…\u201d", extracto: "Donde hubo pérdida, Dios promete un intercambio: belleza a cambio de ceniza." },
+  { id: 8, fecha: "8 jun", fechaLabel: "8 jun", mes: "Junio", tema: "Gracia", referencia: "2 Corintios 12:9", titulo: "Poder en la Debilidad", versiculo: "\u201cBástate mi gracia; porque mi poder se perfecciona en la debilidad…\u201d", extracto: "La debilidad no es un obstáculo para Dios: es el lugar donde su poder se nota más." },
 ];
 
-const DEVOCIONAL_HOY = {
-  fecha: "Lunes 13 de julio",
+const DEVOCIONAL_EJEMPLO = {
+  fechaLabel: "Lunes 13 de julio",
   referencia: "Juan 15:5 (RVR1960)",
   titulo: "Permanecer en la Vid",
   versiculo:
@@ -45,17 +47,17 @@ const DEVOCIONAL_HOY = {
     "Señor, quiero permanecer en Vos hoy. Ayudame a no depender de mi propio esfuerzo, sino a mantenerme conectado a tu presencia en cada decisión del día. Que mi vida dé fruto porque está unida a la tuya. Amén.",
   aplicacion:
     "Elegí un momento concreto de tu día (al levantarte, en el trabajo, antes de dormir) para detenerte 2 minutos y recordar que estás unido a Él. No se trata de hacer más, sino de permanecer.",
-  audio: { duracion: "4:32" },
+  audioUrl: "",
 };
 
-const REUNIONES = [
+const REUNIONES_EJEMPLO = [
   { id: 1, titulo: "Culto Central", dia: "Domingo 19/07", hora: "19:00", lugar: "Templo Central", recordar: true },
   { id: 2, titulo: "Escuela para Padres", dia: "Martes 21/07", hora: "20:00", lugar: "Salón Anexo", recordar: false },
   { id: 3, titulo: "Mi Peña Cristiana", dia: "Viernes 24/07", hora: "21:00", lugar: "Patio Central", recordar: true },
   { id: 4, titulo: "Escuela Bíblica Niños", dia: "Sábado 25/07", hora: "16:00", lugar: "Aula 2", recordar: false },
 ];
 
-const NOVEDADES = [
+const NOVEDADES_EJEMPLO = [
   {
     id: 1,
     titulo: "Inscripciones abiertas: Escuela para Padres",
@@ -108,30 +110,58 @@ function Etiqueta({ children }) {
   );
 }
 
-function ReproductorAudio({ duracion }) {
+function ReproductorAudio({ src }) {
+  const audioRef = useRef(null);
   const [reproduciendo, setReproduciendo] = useState(false);
   const [progreso, setProgreso] = useState(0);
-  const intervaloRef = useRef(null);
+  const [duracion, setDuracion] = useState(0);
 
   useEffect(() => {
-    if (reproduciendo) {
-      intervaloRef.current = setInterval(() => {
-        setProgreso((p) => (p >= 100 ? 100 : p + 0.7));
-      }, 200);
-    } else {
-      clearInterval(intervaloRef.current);
-    }
-    return () => clearInterval(intervaloRef.current);
-  }, [reproduciendo]);
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onTime = () => setProgreso(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
+    const onLoaded = () => setDuracion(audio.duration || 0);
+    const onPlay = () => setReproduciendo(true);
+    const onPause = () => setReproduciendo(false);
+    const onEnded = () => {
+      setReproduciendo(false);
+      setProgreso(0);
+    };
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onLoaded);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("loadedmetadata", onLoaded);
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, [src]);
 
-  useEffect(() => {
-    if (progreso >= 100) setReproduciendo(false);
-  }, [progreso]);
+  const alternar = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (reproduciendo) audio.pause();
+    else audio.play().catch(() => {});
+  };
+
+  const formatoTiempo = (segundos) => {
+    if (!segundos || isNaN(segundos)) return "0:00";
+    const m = Math.floor(segundos / 60);
+    const s = Math.floor(segundos % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
   return (
     <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#241B0E" }}>
+      <audio ref={audioRef} src={src} preload="metadata" />
       <button
-        onClick={() => setReproduciendo(!reproduciendo)}
+        onClick={alternar}
         className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
         style={{ backgroundColor: "#E8A33D" }}
         aria-label={reproduciendo ? "Pausar audio" : "Reproducir audio"}
@@ -154,7 +184,7 @@ function ReproductorAudio({ duracion }) {
             Audio del devocional
           </span>
           <span className="text-[10px]" style={{ color: "#C9B892" }}>
-            {duracion}
+            {formatoTiempo(duracion)}
           </span>
         </div>
       </div>
@@ -220,13 +250,14 @@ function ModalCompartir({ titulo, onCerrar }) {
   );
 }
 
-function PantallaInicio({ leido, setLeido, racha }) {
+function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
   const [mostrarCompartir, setMostrarCompartir] = useState(false);
+  const proximaReunion = reuniones && reuniones.length ? reuniones[0] : null;
   return (
     <div className="px-5 pt-6 pb-4 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <Etiqueta>{DEVOCIONAL_HOY.fecha}</Etiqueta>
+          <Etiqueta>{devocional.fechaLabel}</Etiqueta>
           <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
             Devocional del día
           </h1>
@@ -245,9 +276,9 @@ function PantallaInicio({ leido, setLeido, racha }) {
       >
         <div className="flex items-start justify-between">
           <div>
-            <Etiqueta>{DEVOCIONAL_HOY.referencia}</Etiqueta>
+            <Etiqueta>{devocional.referencia}</Etiqueta>
             <h2 className="text-lg mt-1" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
-              {DEVOCIONAL_HOY.titulo}
+              {devocional.titulo}
             </h2>
           </div>
           <button
@@ -260,20 +291,20 @@ function PantallaInicio({ leido, setLeido, racha }) {
           </button>
         </div>
 
-        <ReproductorAudio duracion={DEVOCIONAL_HOY.audio.duracion} />
+        {devocional.audioUrl && <ReproductorAudio src={devocional.audioUrl} />}
 
         <blockquote
           className="text-[14px] leading-relaxed italic pl-3 border-l-2"
           style={{ color: "#4A4030", borderColor: "#D9B26B" }}
         >
-          {DEVOCIONAL_HOY.versiculo}
+          {devocional.versiculo}
         </blockquote>
 
         <div className="space-y-3 pt-1 border-t" style={{ borderColor: "#E4DCC8" }}>
-          <SeccionDevocional etiqueta="Desarrollo">{DEVOCIONAL_HOY.desarrollo}</SeccionDevocional>
-          <SeccionDevocional etiqueta="Oración">{DEVOCIONAL_HOY.oracion}</SeccionDevocional>
+          <SeccionDevocional etiqueta="Desarrollo">{devocional.desarrollo}</SeccionDevocional>
+          <SeccionDevocional etiqueta="Oración">{devocional.oracion}</SeccionDevocional>
           <SeccionDevocional etiqueta="Aplicación" cursiva>
-            {DEVOCIONAL_HOY.aplicacion}
+            {devocional.aplicacion}
           </SeccionDevocional>
         </div>
       </div>
@@ -290,25 +321,27 @@ function PantallaInicio({ leido, setLeido, racha }) {
         {leido ? "Marcado como leído" : "Marcar como leído"}
       </button>
 
-      <div>
-        <Etiqueta>Próximo</Etiqueta>
-        <div className="mt-2 rounded-xl p-4 flex items-center gap-3" style={{ backgroundColor: "#1B2029" }}>
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#2A3140" }}>
-            <Calendar size={16} style={{ color: "#E8A33D" }} />
-          </div>
-          <div className="flex-1">
-            <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
-              {REUNIONES[0].titulo}
-            </p>
-            <p className="text-[12px]" style={{ color: "#8A94A6" }}>
-              {REUNIONES[0].dia} · {REUNIONES[0].hora}
-            </p>
+      {proximaReunion && (
+        <div>
+          <Etiqueta>Próximo</Etiqueta>
+          <div className="mt-2 rounded-xl p-4 flex items-center gap-3" style={{ backgroundColor: "#1B2029" }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#2A3140" }}>
+              <Calendar size={16} style={{ color: "#E8A33D" }} />
+            </div>
+            <div className="flex-1">
+              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
+                {proximaReunion.titulo}
+              </p>
+              <p className="text-[12px]" style={{ color: "#8A94A6" }}>
+                {proximaReunion.dia} · {proximaReunion.hora}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {mostrarCompartir && (
-        <ModalCompartir titulo={DEVOCIONAL_HOY.titulo} onCerrar={() => setMostrarCompartir(false)} />
+        <ModalCompartir titulo={devocional.titulo} onCerrar={() => setMostrarCompartir(false)} />
       )}
     </div>
   );
@@ -405,15 +438,15 @@ function PantallaNovedades({ novedades, esAdmin, setMostrarForm }) {
   );
 }
 
-function PantallaHistorial() {
+function PantallaHistorial({ historial }) {
   const [temaActivo, setTemaActivo] = useState("Todos");
   const [mesActivo, setMesActivo] = useState("Todos");
   const [expandidoId, setExpandidoId] = useState(null);
 
-  const temas = ["Todos", ...Array.from(new Set(HISTORIAL_DEVOCIONALES.map((d) => d.tema)))];
-  const meses = ["Todos", ...Array.from(new Set(HISTORIAL_DEVOCIONALES.map((d) => d.mes)))];
+  const temas = ["Todos", ...Array.from(new Set(historial.map((d) => d.tema)))];
+  const meses = ["Todos", ...Array.from(new Set(historial.map((d) => d.mes)))];
 
-  const filtrados = HISTORIAL_DEVOCIONALES.filter(
+  const filtrados = historial.filter(
     (d) => (temaActivo === "Todos" || d.tema === temaActivo) && (mesActivo === "Todos" || d.mes === mesActivo)
   );
 
@@ -485,7 +518,7 @@ function PantallaHistorial() {
                       {d.titulo}
                     </p>
                     <p className="text-[11px]" style={{ color: "#8A94A6" }}>
-                      {d.fecha} · {d.tema} · {d.referencia}
+                      {d.fechaLabel || d.fecha} · {d.tema} · {d.referencia}
                     </p>
                   </div>
                 </div>
@@ -561,10 +594,55 @@ export default function AppRestauracion() {
   const [tab, setTab] = useState("inicio");
   const [leido, setLeido] = useState(false);
   const [racha, setRacha] = useState(6);
-  const [reuniones, setReuniones] = useState(REUNIONES);
-  const [novedades, setNovedades] = useState(NOVEDADES);
+  const [devocional, setDevocional] = useState(DEVOCIONAL_EJEMPLO);
+  const [historial, setHistorial] = useState(HISTORIAL_EJEMPLO);
+  const [reuniones, setReuniones] = useState(REUNIONES_EJEMPLO);
+  const [novedades, setNovedades] = useState(NOVEDADES_EJEMPLO);
+  const [usandoEjemplo, setUsandoEjemplo] = useState(true);
   const [esAdmin, setEsAdmin] = useState(false);
   const [mostrarForm, setMostrarForm] = useState(false);
+
+  useEffect(() => {
+    let activo = true;
+    async function cargarDatos() {
+      const [filasDevo, filasReu, filasNov] = await Promise.all([
+        fetchSheet(CSV_DEVOCIONALES),
+        fetchSheet(CSV_REUNIONES),
+        fetchSheet(CSV_NOVEDADES),
+      ]);
+      if (!activo) return;
+      let huboDatosReales = false;
+
+      if (filasDevo && filasDevo.length) {
+        const mapeados = filasDevo.map(mapDevocional).filter((d) => d.titulo);
+        if (mapeados.length) {
+          const ordenados = [...mapeados].sort((a, b) => (b.fecha || 0) - (a.fecha || 0));
+          setHistorial(ordenados);
+          setDevocional(elegirDevocionalDeHoy(mapeados) || ordenados[0]);
+          huboDatosReales = true;
+        }
+      }
+      if (filasReu && filasReu.length) {
+        const mapeados = filasReu.map(mapReunion).filter((r) => r.titulo);
+        if (mapeados.length) {
+          setReuniones(mapeados.sort((a, b) => (a.fecha || 0) - (b.fecha || 0)));
+          huboDatosReales = true;
+        }
+      }
+      if (filasNov && filasNov.length) {
+        const mapeados = filasNov.map(mapNovedad).filter((n) => n.titulo).reverse();
+        if (mapeados.length) {
+          setNovedades(mapeados);
+          huboDatosReales = true;
+        }
+      }
+      setUsandoEjemplo(!huboDatosReales);
+    }
+    cargarDatos();
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const marcarLeido = () => {
     if (!leido) setRacha(racha + 1);
@@ -612,18 +690,32 @@ export default function AppRestauracion() {
           </button>
         </div>
 
+        {esAdmin && usandoEjemplo && (
+          <div className="mx-5 mb-1 px-3 py-1.5 rounded-lg text-[10px] text-center" style={{ backgroundColor: "rgba(193,80,46,0.15)", color: "#E0876A" }}>
+            Mostrando contenido de ejemplo — conectá las planillas en config.js
+          </div>
+        )}
+
         {/* encabezado con logo */}
         <div className="flex items-center justify-center pt-2 pb-1">
           <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain" />
         </div>
 
         <div className="overflow-y-auto" style={{ height: "calc(100% - 196px)" }}>
-          {tab === "inicio" && <PantallaInicio leido={leido} setLeido={marcarLeido} racha={racha} />}
+          {tab === "inicio" && (
+            <PantallaInicio
+              leido={leido}
+              setLeido={marcarLeido}
+              racha={racha}
+              devocional={devocional}
+              reuniones={reuniones}
+            />
+          )}
           {tab === "reuniones" && <PantallaReuniones reuniones={reuniones} toggleRecordar={toggleRecordar} />}
           {tab === "novedades" && (
             <PantallaNovedades novedades={novedades} esAdmin={esAdmin} setMostrarForm={setMostrarForm} />
           )}
-          {tab === "historial" && <PantallaHistorial />}
+          {tab === "historial" && <PantallaHistorial historial={historial} />}
         </div>
 
         {mostrarForm && (
