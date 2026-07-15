@@ -19,7 +19,6 @@ import {
   MessageCircle,
   Link as LinkIcon,
 } from "lucide-react";
-import { CSV_DEVOCIONALES, CSV_REUNIONES, CSV_NOVEDADES } from "./config";
 import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy } from "./lib/sheets";
 
 const LOGO_IGLESIA = "/logo.png";
@@ -606,9 +605,9 @@ export default function AppRestauracion() {
     let activo = true;
     async function cargarDatos() {
       const [filasDevo, filasReu, filasNov] = await Promise.all([
-        fetchSheet(CSV_DEVOCIONALES),
-        fetchSheet(CSV_REUNIONES),
-        fetchSheet(CSV_NOVEDADES),
+        fetchSheet("/api/devocionales"),
+        fetchSheet("/api/reuniones"),
+        fetchSheet("/api/novedades"),
       ]);
       if (!activo) return;
       let huboDatosReales = false;
