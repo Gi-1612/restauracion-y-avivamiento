@@ -12,6 +12,13 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    res.status(500).json({
+      error: "Falta conectar el almacenamiento de imágenes (Blob) en Vercel, o falta hacer un redeploy después de conectarlo.",
+    });
+    return;
+  }
+
   try {
     const jsonResponse = await handleUpload({
       body: req.body,
@@ -24,6 +31,7 @@ export default async function handler(req, res) {
     });
     res.status(200).json(jsonResponse);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error en /api/admin/upload:", error);
+    res.status(400).json({ error: error.message, stack: error.stack });
   }
 }
