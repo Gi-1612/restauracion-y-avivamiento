@@ -3,11 +3,24 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
+  server: {
+    // Para desarrollo local: corré `vercel dev` (o el harness equivalente)
+    // en el puerto 3000 y `npm run dev` va a redirigirle las llamadas a /api.
+    proxy: {
+      "/api": "http://localhost:3000",
+    },
+  },
   plugins: [
     react(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["logo.png"],
+      workbox: {
+        // Sin esto, el service worker de la PWA redirige CUALQUIER navegación
+        // (incluida la de un archivo de audio) de vuelta a la app. Excluimos
+        // archivos de audio para que se sirvan tal cual, sin redirigir.
+        navigateFallbackDenylist: [/\.(mp3|mp4|wav|m4a|ogg)$/i],
+      },
       manifest: {
         name: "Restauración y Avivamiento",
         short_name: "Restauración",
