@@ -21,9 +21,12 @@ import {
   Instagram,
   Facebook,
   Youtube,
+  Image as ImageIcon,
+  Sparkles,
 } from "lucide-react";
 import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy, cargarRacha, alternarLecturaDeHoy } from "./lib/sheets";
 import {
+  HERO_IMAGEN_URL,
   CONTACTO_DIRECCION,
   CONTACTO_MAPA_URL,
   CONTACTO_WHATSAPP,
@@ -61,10 +64,10 @@ const DEVOCIONAL_EJEMPLO = {
 };
 
 const REUNIONES_EJEMPLO = [
-  { id: 1, titulo: "Culto Central", dia: "Domingo 19/07", hora: "19:00", lugar: "Templo Central", recordar: true },
-  { id: 2, titulo: "Escuela para Padres", dia: "Martes 21/07", hora: "20:00", lugar: "Salón Anexo", recordar: false },
-  { id: 3, titulo: "Mi Peña Cristiana", dia: "Viernes 24/07", hora: "21:00", lugar: "Patio Central", recordar: true },
-  { id: 4, titulo: "Escuela Bíblica Niños", dia: "Sábado 25/07", hora: "16:00", lugar: "Aula 2", recordar: false },
+  { id: 1, titulo: "Culto Central", dia: "Domingo 19/07", hora: "19:00", lugar: "Templo Central", imagen: "https://picsum.photos/id/1015/900/600", recordar: true },
+  { id: 2, titulo: "Escuela para Padres", dia: "Martes 21/07", hora: "20:00", lugar: "Salón Anexo", imagen: "", recordar: false },
+  { id: 3, titulo: "Mi Peña Cristiana", dia: "Viernes 24/07", hora: "21:00", lugar: "Patio Central", imagen: "https://picsum.photos/id/1021/900/600", recordar: true },
+  { id: 4, titulo: "Escuela Bíblica Niños", dia: "Sábado 25/07", hora: "16:00", lugar: "Aula 2", imagen: "", recordar: false },
 ];
 
 const NOVEDADES_EJEMPLO = [
@@ -73,6 +76,7 @@ const NOVEDADES_EJEMPLO = [
     titulo: "Inscripciones abiertas: Escuela para Padres",
     cuerpo: "Ya podés anotarte para el próximo ciclo. Cupos limitados.",
     autor: "Equipo de Medios",
+    imagen: "https://picsum.photos/id/1024/900/600",
     hace: "hace 2 h",
   },
   {
@@ -80,6 +84,7 @@ const NOVEDADES_EJEMPLO = [
     titulo: "Nuevo horario de Escuela Bíblica",
     cuerpo: "A partir de agosto, la Escuela Bíblica de niños pasa a las 16:00.",
     autor: "Ministerio de Niños",
+    imagen: "",
     hace: "hace 1 día",
   },
   {
@@ -87,6 +92,7 @@ const NOVEDADES_EJEMPLO = [
     titulo: "Se viene Mi Peña Cristiana",
     cuerpo: "Una noche de música, testimonios y comunidad. Traé a un amigo.",
     autor: "Equipo de Medios",
+    imagen: "",
     hace: "hace 2 días",
   },
 ];
@@ -123,6 +129,29 @@ function Etiqueta({ children }) {
     <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: "#8A94A6" }}>
       {children}
     </span>
+  );
+}
+
+function ImagenConReserva({ src, alt, className, iconSize = 26 }) {
+  const [fallo, setFallo] = useState(false);
+  if (!src || fallo) {
+    return (
+      <div
+        className={`flex items-center justify-center ${className || ""}`}
+        style={{ background: "linear-gradient(135deg, #2A3140 0%, #1B2029 100%)" }}
+      >
+        <ImageIcon size={iconSize} style={{ color: "#3E4658" }} strokeWidth={1.4} />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFallo(true)}
+      className={`object-cover ${className || ""}`}
+    />
   );
 }
 
@@ -395,38 +424,61 @@ function Encabezado({ esAdmin, setEsAdmin }) {
 }
 
 function Hero({ proximaReunion }) {
+  const tieneFoto = Boolean(HERO_IMAGEN_URL);
   return (
     <section
       id="top"
-      className="px-5 pt-16 pb-14 sm:pt-24 sm:pb-20 text-center"
-      style={{
-        background: "radial-gradient(ellipse at top, rgba(232,163,61,0.12) 0%, rgba(18,21,28,0) 60%)",
-      }}
+      className="relative px-5 pt-24 pb-16 sm:pt-36 sm:pb-24 text-center overflow-hidden min-h-[80vh] sm:min-h-[88vh] flex items-center justify-center"
+      style={
+        tieneFoto
+          ? {
+              backgroundImage: `linear-gradient(180deg, rgba(11,13,18,0.55) 0%, rgba(11,13,18,0.75) 55%, #12151C 100%), url(${HERO_IMAGEN_URL})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : { backgroundColor: "#12151C" }
+      }
     >
-      <div className="max-w-3xl mx-auto space-y-6">
-        <Etiqueta>Bienvenido a nuestra comunidad</Etiqueta>
+      {!tieneFoto && (
+        <>
+          <div
+            className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0) 70%)" }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-3xl pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(62,92,70,0.25) 0%, rgba(62,92,70,0) 70%)" }}
+          />
+        </>
+      )}
+
+      <div className="relative max-w-3xl mx-auto space-y-6">
+        <div className="inline-flex items-center gap-2 justify-center">
+          <Sparkles size={14} style={{ color: "#E8A33D" }} />
+          <Etiqueta>Bienvenido a nuestra comunidad</Etiqueta>
+        </div>
         <h1
-          className="text-4xl sm:text-5xl leading-tight"
+          className="text-4xl sm:text-6xl leading-tight"
           style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}
         >
           Restauración y Avivamiento
         </h1>
-        <p className="text-[15px] sm:text-base leading-relaxed max-w-xl mx-auto" style={{ color: "#B7BFCC" }}>
+        <p className="text-[15px] sm:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: "#C7CEDA" }}>
           Un lugar para encontrarte con Dios, crecer en comunidad y enterarte de todo lo que pasa en la iglesia:
           reuniones, actividades y novedades, en un solo lugar.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
             href="#agenda"
-            className="rounded-xl px-5 py-3 text-[14px] font-medium"
+            className="rounded-xl px-6 py-3.5 text-[14px] font-semibold shadow-lg"
             style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
           >
             Ver agenda de actividades
           </a>
           <a
             href="#novedades"
-            className="rounded-xl px-5 py-3 text-[14px] font-medium border"
-            style={{ borderColor: "rgba(255,255,255,0.15)", color: "#F2ECDD" }}
+            className="rounded-xl px-6 py-3.5 text-[14px] font-medium border backdrop-blur"
+            style={{ borderColor: "rgba(255,255,255,0.25)", color: "#F2ECDD", backgroundColor: "rgba(255,255,255,0.04)" }}
           >
             Ver novedades
           </a>
@@ -434,8 +486,8 @@ function Hero({ proximaReunion }) {
 
         {proximaReunion && (
           <div
-            className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto"
-            style={{ backgroundColor: "#1B2029" }}
+            className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto backdrop-blur"
+            style={{ backgroundColor: "rgba(27,32,41,0.85)", border: "1px solid rgba(255,255,255,0.08)" }}
           >
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
               <Calendar size={16} style={{ color: "#E8A33D" }} />
@@ -453,10 +505,51 @@ function Hero({ proximaReunion }) {
   );
 }
 
+function BotonRecordar({ activo, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium shrink-0"
+      style={{
+        backgroundColor: activo ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)",
+        color: activo ? "#E8A33D" : "#8A94A6",
+      }}
+    >
+      <Bell size={13} fill={activo ? "#E8A33D" : "none"} />
+      {activo ? "Recordatorio activo" : "Avisarme"}
+    </button>
+  );
+}
+
+function TarjetaReunion({ r, toggleRecordar }) {
+  return (
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+      <ImagenConReserva src={r.imagen} alt={r.titulo} className="w-full aspect-[16/10]" />
+      <div className="p-4 space-y-2 flex-1 flex flex-col">
+        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+          {r.titulo}
+        </p>
+        <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+          <Clock size={12} />
+          {r.dia} · {r.hora}
+        </div>
+        <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+          <MapPin size={12} />
+          {r.lugar}
+        </div>
+        <div className="pt-1 mt-auto">
+          <BotonRecordar activo={r.recordar} onClick={() => toggleRecordar(r.id)} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SeccionAgenda({ reuniones, toggleRecordar }) {
+  const [destacada, ...resto] = reuniones;
   return (
     <section id="agenda" className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center max-w-xl mx-auto">
           <Etiqueta>Agenda</Etiqueta>
           <Titulo>Próximas actividades</Titulo>
@@ -464,67 +557,90 @@ function SeccionAgenda({ reuniones, toggleRecordar }) {
             Cultos, escuelas y encuentros de la comunidad. Activá el recordatorio para no perdértelos.
           </p>
         </div>
+
         {reuniones.length === 0 ? (
           <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
             Todavía no hay actividades cargadas.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {reuniones.map((r) => (
-              <div
-                key={r.id}
-                className="rounded-xl p-4 flex items-start justify-between gap-3"
-                style={{ backgroundColor: "#1B2029" }}
-              >
-                <div className="space-y-1.5">
-                  <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-                    {r.titulo}
-                  </p>
-                  <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                    <Clock size={12} />
-                    {r.dia} · {r.hora}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                    <MapPin size={12} />
-                    {r.lugar}
-                  </div>
+          <>
+            <div
+              className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2"
+              style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}
+            >
+              <ImagenConReserva
+                src={destacada.imagen}
+                alt={destacada.titulo}
+                className="w-full aspect-[16/10] sm:aspect-auto sm:h-full"
+                iconSize={40}
+              />
+              <div className="p-6 sm:p-8 flex flex-col justify-center gap-3">
+                <Etiqueta>Próxima actividad</Etiqueta>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                  {destacada.titulo}
+                </h3>
+                <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                  <Clock size={14} />
+                  {destacada.dia} · {destacada.hora}
                 </div>
-                <button
-                  onClick={() => toggleRecordar(r.id)}
-                  className="flex flex-col items-center gap-1 pt-1 shrink-0"
-                  aria-label="Activar recordatorio"
-                >
-                  <Bell
-                    size={18}
-                    fill={r.recordar ? "#E8A33D" : "none"}
-                    style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}
-                  />
-                  <span className="text-[9px]" style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}>
-                    {r.recordar ? "Activo" : "Avisarme"}
-                  </span>
-                </button>
+                <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                  <MapPin size={14} />
+                  {destacada.lugar}
+                </div>
+                <div className="pt-1">
+                  <BotonRecordar activo={destacada.recordar} onClick={() => toggleRecordar(destacada.id)} />
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+
+            {resto.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resto.map((r) => (
+                  <TarjetaReunion key={r.id} r={r} toggleRecordar={toggleRecordar} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
   );
 }
 
+function TarjetaNovedad({ n }) {
+  return (
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+      <ImagenConReserva src={n.imagen} alt={n.titulo} className="w-full aspect-[16/10]" />
+      <div className="p-4 flex-1 flex flex-col">
+        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+          {n.titulo}
+        </p>
+        <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
+          {n.cuerpo}
+        </p>
+        <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
+          <span>{n.autor}</span>
+          <span>·</span>
+          <span>{n.hace}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SeccionNovedades({ novedades, esAdmin, setMostrarForm }) {
+  const [destacada, ...resto] = novedades;
   return (
     <section id="novedades" className="px-5 py-14 sm:py-20 scroll-mt-16">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex items-center justify-between max-w-xl mx-auto">
-          <div className="text-center flex-1">
-            <Etiqueta>Comunidad</Etiqueta>
-            <Titulo>Novedades</Titulo>
-          </div>
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>Comunidad</Etiqueta>
+          <Titulo>Novedades</Titulo>
+          <p className="text-[14px] mt-2" style={{ color: "#8A94A6" }}>
+            Todo lo que queremos contarte: inscripciones, cambios de horario y anuncios de la iglesia.
+          </p>
         </div>
-        <p className="text-center text-[14px] max-w-xl mx-auto -mt-3" style={{ color: "#8A94A6" }}>
-          Todo lo que queremos contarte: inscripciones, cambios de horario y anuncios de la iglesia.
-        </p>
+
         {esAdmin && (
           <div className="flex justify-center">
             <button
@@ -537,28 +653,47 @@ function SeccionNovedades({ novedades, esAdmin, setMostrarForm }) {
             </button>
           </div>
         )}
+
         {novedades.length === 0 ? (
           <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
             Todavía no hay novedades publicadas.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {novedades.map((n) => (
-              <div key={n.id} className="rounded-xl p-4" style={{ backgroundColor: "#1B2029" }}>
-                <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-                  {n.titulo}
+          <>
+            <div
+              className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2"
+              style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}
+            >
+              <ImagenConReserva
+                src={destacada.imagen}
+                alt={destacada.titulo}
+                className="w-full aspect-[16/10] sm:aspect-auto sm:h-full"
+                iconSize={40}
+              />
+              <div className="p-6 sm:p-8 flex flex-col justify-center gap-2">
+                <Etiqueta>Lo más reciente</Etiqueta>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                  {destacada.titulo}
+                </h3>
+                <p className="text-[14px] leading-relaxed" style={{ color: "#B7BFCC" }}>
+                  {destacada.cuerpo}
                 </p>
-                <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
-                  {n.cuerpo}
-                </p>
-                <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
-                  <span>{n.autor}</span>
+                <div className="flex items-center gap-2 text-[12px] pt-1" style={{ color: "#5A6272" }}>
+                  <span>{destacada.autor}</span>
                   <span>·</span>
-                  <span>{n.hace}</span>
+                  <span>{destacada.hace}</span>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+
+            {resto.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resto.map((n) => (
+                  <TarjetaNovedad key={n.id} n={n} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
@@ -771,6 +906,7 @@ function SeccionDevocional({ devocional, leido, setLeido, racha, historial }) {
 function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
   const [titulo, setTitulo] = useState("");
   const [cuerpo, setCuerpo] = useState("");
+  const [imagen, setImagen] = useState("");
   return (
     <ModalCentrado onCerrar={onCerrar}>
       <div className="flex items-center justify-between">
@@ -797,10 +933,20 @@ function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
           className="w-full rounded-lg px-3 py-2.5 text-[14px] outline-none resize-none"
           style={{ backgroundColor: "#12151C", color: "#F2ECDD" }}
         />
+        <div className="flex items-center gap-2 rounded-lg px-3 py-2.5" style={{ backgroundColor: "#12151C" }}>
+          <ImageIcon size={15} style={{ color: "#5A6272" }} className="shrink-0" />
+          <input
+            value={imagen}
+            onChange={(e) => setImagen(e.target.value)}
+            placeholder="Link a una foto (opcional)"
+            className="w-full bg-transparent text-[14px] outline-none"
+            style={{ color: "#F2ECDD" }}
+          />
+        </div>
       </div>
       <button
         onClick={() => {
-          if (titulo.trim()) onPublicar(titulo, cuerpo);
+          if (titulo.trim()) onPublicar(titulo, cuerpo, imagen);
         }}
         className="w-full rounded-xl py-3 text-[14px] font-medium"
         style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
@@ -937,8 +1083,11 @@ export default function AppRestauracion() {
     setReuniones(reuniones.map((r) => (r.id === id ? { ...r, recordar: !r.recordar } : r)));
   };
 
-  const publicarNovedad = (titulo, cuerpo) => {
-    setNovedades([{ id: Date.now(), titulo, cuerpo: cuerpo || "—", autor: "Vos (admin)", hace: "ahora" }, ...novedades]);
+  const publicarNovedad = (titulo, cuerpo, imagen) => {
+    setNovedades([
+      { id: Date.now(), titulo, cuerpo: cuerpo || "—", autor: "Vos (admin)", imagen: imagen || "", hace: "ahora" },
+      ...novedades,
+    ]);
     setMostrarForm(false);
   };
 

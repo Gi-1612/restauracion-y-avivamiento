@@ -117,6 +117,7 @@ export function mapReunion(row, i) {
     dia: fecha ? fechaConDia(fecha) : row["Fecha"] || "",
     hora: row["Hora"] || "",
     lugar: row["Lugar"] || "",
+    imagen: (row["Imagen"] || "").trim(),
     recordar: false,
   };
 }
@@ -128,6 +129,7 @@ export function mapNovedad(row, i) {
     titulo: row["Titulo"] || row["Título"] || "",
     cuerpo: row["Cuerpo"] || "",
     autor: row["Autor"] || "Equipo de Medios",
+    imagen: (row["Imagen"] || "").trim(),
     marca,
     hace: tiempoRelativo(marca),
   };

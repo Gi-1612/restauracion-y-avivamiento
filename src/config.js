@@ -8,6 +8,11 @@ export const CSV_DEVOCIONALES = "https://docs.google.com/spreadsheets/d/e/2PACX-
 export const CSV_REUNIONES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTcjFaS67wFG4_GqKhBLLZbV70vJFOFaXpkh9e4AUWnaW5bVNjY-QbgpPXUzWID9tYLvVgu7IhOjb_h/pub?gid=562421421&single=true&output=csv";
 export const CSV_NOVEDADES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3k3HWn8h3fL7NdmogX8LHaX177-CyJTz0XLW3fwP6gvRa1tFcAgyd_4oiMTqdWScJ8nG_pAeHgKfc/pub?gid=1492904635&single=true&output=csv";
 
+// Foto de fondo para la portada (hero). Podés usar un link de Google Drive
+// (compartido "cualquiera con el link"), Imgur, o cualquier link directo a una imagen.
+// Si lo dejás vacío, se usa un fondo con degradado en vez de una foto.
+export const HERO_IMAGEN_URL = "";
+
 // Datos de contacto para el pie de página de la landing page.
 // Dejalos vacíos ("") si todavía no los tenés: esa sección simplemente no se muestra.
 export const CONTACTO_DIRECCION = ""; // ej: "Av. Ejemplo 123, Ciudad"
