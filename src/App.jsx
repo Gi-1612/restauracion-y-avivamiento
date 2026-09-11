@@ -3,13 +3,9 @@ import {
   Flame,
   Calendar,
   Bell,
-  Newspaper,
-  Settings,
-  Check,
-  Plus,
   Clock,
   MapPin,
-  ChevronLeft,
+  Menu,
   X,
   Play,
   Pause,
@@ -18,67 +14,18 @@ import {
   ChevronDown,
   MessageCircle,
   Link as LinkIcon,
+  Instagram,
+  Facebook,
+  Youtube,
+  Image as ImageIcon,
+  Sparkles,
+  HandCoins,
+  ArrowUpRight,
+  Settings,
 } from "lucide-react";
-import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy, cargarRacha, alternarLecturaDeHoy } from "./lib/sheets";
+import { aFecha, fechaConDia, fechaLarga, tiempoRelativo, cargarRacha, alternarLecturaDeHoy } from "./lib/formato";
 
 const LOGO_IGLESIA = "/logo.png";
-
-const HISTORIAL_EJEMPLO = [
-  { id: 1, fecha: "13 jul", fechaLabel: "13 jul", mes: "Julio", tema: "Perseverancia", referencia: "Juan 15:5", titulo: "Permanecer en la Vid", versiculo: "\u201cYo soy la vid, vosotros los pámpanos…\u201d", extracto: "El fruto llega como consecuencia de permanecer conectados, no del esfuerzo aislado." },
-  { id: 2, fecha: "12 jul", fechaLabel: "12 jul", mes: "Julio", tema: "Perseverancia", referencia: "Hebreos 10:36", titulo: "La Paciencia que Sostiene", versiculo: "\u201cVosotros tenéis necesidad de paciencia…\u201d", extracto: "La promesa se recibe después de haber hecho la voluntad de Dios, no antes." },
-  { id: 3, fecha: "10 jul", fechaLabel: "10 jul", mes: "Julio", tema: "Fe", referencia: "Marcos 11:24", titulo: "Pedir Creyendo", versiculo: "\u201cTodo lo que pidiereis orando, creed que lo recibiréis…\u201d", extracto: "La fe no es negar la dificultad, es confiar en Quién la puede resolver." },
-  { id: 4, fecha: "8 jul", fechaLabel: "8 jul", mes: "Julio", tema: "Restauración", referencia: "Joel 2:25", titulo: "Los Años que la Oruga Comió", versiculo: "\u201cY os restituiré los años que comió la oruga…\u201d", extracto: "Dios no solo perdona: también restaura lo que el tiempo perdido se llevó." },
-  { id: 5, fecha: "29 jun", fechaLabel: "29 jun", mes: "Junio", tema: "Gracia", referencia: "Efesios 2:8", titulo: "Salvos por Gracia", versiculo: "\u201cPorque por gracia sois salvos, por medio de la fe…\u201d", extracto: "No hay mérito propio que alcance: todo es don, y eso nos libera." },
-  { id: 6, fecha: "22 jun", fechaLabel: "22 jun", mes: "Junio", tema: "Fe", referencia: "Hebreos 11:1", titulo: "La Certeza de lo que se Espera", versiculo: "\u201cEs, pues, la fe la certeza de lo que se espera…\u201d", extracto: "Creer no es ver primero: es sostenerse en lo que Dios ya prometió." },
-  { id: 7, fecha: "15 jun", fechaLabel: "15 jun", mes: "Junio", tema: "Restauración", referencia: "Isaías 61:3", titulo: "Gloria en Vez de Ceniza", versiculo: "\u201c…para ordenar que a los afligidos de Sion se les dé gloria en lugar de ceniza…\u201d", extracto: "Donde hubo pérdida, Dios promete un intercambio: belleza a cambio de ceniza." },
-  { id: 8, fecha: "8 jun", fechaLabel: "8 jun", mes: "Junio", tema: "Gracia", referencia: "2 Corintios 12:9", titulo: "Poder en la Debilidad", versiculo: "\u201cBástate mi gracia; porque mi poder se perfecciona en la debilidad…\u201d", extracto: "La debilidad no es un obstáculo para Dios: es el lugar donde su poder se nota más." },
-];
-
-const DEVOCIONAL_EJEMPLO = {
-  fechaLabel: "Lunes 13 de julio",
-  referencia: "Juan 15:5 (RVR1960)",
-  titulo: "Permanecer en la Vid",
-  versiculo:
-    "\u201cYo soy la vid, vosotros los pámpanos; el que permanece en mí… este lleva mucho fruto; porque separados de mí nada podéis hacer.\u201d",
-  desarrollo:
-    "Jesús se presenta como la vid verdadera: la vida y el fruto no nacen del esfuerzo aislado, sino de mantenerse unidos a Él día a día. Un pámpano no lucha por dar fruto; simplemente permanece conectado, y el fruto llega como consecuencia natural de esa conexión. Muchas veces medimos nuestra vida espiritual por cuánto hacemos, cuando en realidad se mide por cuánto permanecemos.",
-  oracion:
-    "Señor, quiero permanecer en Vos hoy. Ayudame a no depender de mi propio esfuerzo, sino a mantenerme conectado a tu presencia en cada decisión del día. Que mi vida dé fruto porque está unida a la tuya. Amén.",
-  aplicacion:
-    "Elegí un momento concreto de tu día (al levantarte, en el trabajo, antes de dormir) para detenerte 2 minutos y recordar que estás unido a Él. No se trata de hacer más, sino de permanecer.",
-  audioUrl: "",
-};
-
-const REUNIONES_EJEMPLO = [
-  { id: 1, titulo: "Culto Central", dia: "Domingo 19/07", hora: "19:00", lugar: "Templo Central", recordar: true },
-  { id: 2, titulo: "Escuela para Padres", dia: "Martes 21/07", hora: "20:00", lugar: "Salón Anexo", recordar: false },
-  { id: 3, titulo: "Mi Peña Cristiana", dia: "Viernes 24/07", hora: "21:00", lugar: "Patio Central", recordar: true },
-  { id: 4, titulo: "Escuela Bíblica Niños", dia: "Sábado 25/07", hora: "16:00", lugar: "Aula 2", recordar: false },
-];
-
-const NOVEDADES_EJEMPLO = [
-  {
-    id: 1,
-    titulo: "Inscripciones abiertas: Escuela para Padres",
-    cuerpo: "Ya podés anotarte para el próximo ciclo. Cupos limitados.",
-    autor: "Equipo de Medios",
-    hace: "hace 2 h",
-  },
-  {
-    id: 2,
-    titulo: "Nuevo horario de Escuela Bíblica",
-    cuerpo: "A partir de agosto, la Escuela Bíblica de niños pasa a las 16:00.",
-    autor: "Ministerio de Niños",
-    hace: "hace 1 día",
-  },
-  {
-    id: 3,
-    titulo: "Se viene Mi Peña Cristiana",
-    cuerpo: "Una noche de música, testimonios y comunidad. Traé a un amigo.",
-    autor: "Equipo de Medios",
-    hace: "hace 2 días",
-  },
-];
 
 function Flama({ racha }) {
   const intensidad = Math.min(racha / 30, 1);
@@ -107,6 +54,29 @@ function Etiqueta({ children }) {
       {children}
     </span>
   );
+}
+
+function Titulo({ children }) {
+  return (
+    <h2 className="text-2xl sm:text-3xl mt-1.5" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+      {children}
+    </h2>
+  );
+}
+
+function ImagenConReserva({ src, alt, className, iconSize = 26 }) {
+  const [fallo, setFallo] = useState(false);
+  if (!src || fallo) {
+    return (
+      <div
+        className={`flex items-center justify-center ${className || ""}`}
+        style={{ background: "linear-gradient(135deg, #2A3140 0%, #1B2029 100%)" }}
+      >
+        <ImageIcon size={iconSize} style={{ color: "#3E4658" }} strokeWidth={1.4} />
+      </div>
+    );
+  }
+  return <img src={src} alt={alt} loading="lazy" onError={() => setFallo(true)} className={`object-cover ${className || ""}`} />;
 }
 
 function ReproductorAudio({ src }) {
@@ -148,19 +118,14 @@ function ReproductorAudio({ src }) {
   const alternar = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (reproduciendo) {
-      audio.pause();
-    } else {
-      audio.play().catch(() => setError(true));
-    }
+    if (reproduciendo) audio.pause();
+    else audio.play().catch(() => setError(true));
   };
 
   const formatoTiempo = (segundos) => {
     if (!segundos || isNaN(segundos)) return "0:00";
     const m = Math.floor(segundos / 60);
-    const s = Math.floor(segundos % 60)
-      .toString()
-      .padStart(2, "0");
+    const s = Math.floor(segundos % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
 
@@ -168,11 +133,7 @@ function ReproductorAudio({ src }) {
     <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#241B0E" }}>
       <audio ref={audioRef} src={src} preload="auto" />
       {error ? (
-        <a
-          href={src}
-          className="flex-1 text-[11px] underline text-center py-2"
-          style={{ color: "#E8A33D" }}
-        >
+        <a href={src} className="flex-1 text-[11px] underline text-center py-2" style={{ color: "#E8A33D" }}>
           No se pudo reproducir acá — tocá para escuchar el audio directo
         </a>
       ) : (
@@ -183,18 +144,11 @@ function ReproductorAudio({ src }) {
             style={{ backgroundColor: "#E8A33D" }}
             aria-label={reproduciendo ? "Pausar audio" : "Reproducir audio"}
           >
-            {reproduciendo ? (
-              <Pause size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
-            ) : (
-              <Play size={15} style={{ color: "#241B0E" }} fill="#241B0E" />
-            )}
+            {reproduciendo ? <Pause size={15} style={{ color: "#241B0E" }} fill="#241B0E" /> : <Play size={15} style={{ color: "#241B0E" }} fill="#241B0E" />}
           </button>
           <div className="flex-1">
             <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(232,163,61,0.2)" }}>
-              <div
-                className="h-full rounded-full transition-all"
-                style={{ width: `${progreso}%`, backgroundColor: "#E8A33D" }}
-              />
+              <div className="h-full rounded-full transition-all" style={{ width: `${progreso}%`, backgroundColor: "#E8A33D" }} />
             </div>
             <div className="flex justify-between mt-1">
               <span className="text-[10px]" style={{ color: "#C9B892" }}>
@@ -211,16 +165,32 @@ function ReproductorAudio({ src }) {
   );
 }
 
-function SeccionDevocional({ etiqueta, children, cursiva }) {
+function BloqueTexto({ etiqueta, children, cursiva }) {
+  if (!children) return null;
   return (
     <div>
       <Etiqueta>{etiqueta}</Etiqueta>
-      <p
-        className={`text-[14px] leading-relaxed mt-1.5 ${cursiva ? "italic" : ""}`}
-        style={{ color: cursiva ? "#6B5F47" : "#3D372E" }}
-      >
+      <p className={`text-[14px] leading-relaxed mt-1.5 ${cursiva ? "italic" : ""}`} style={{ color: cursiva ? "#6B5F47" : "#3D372E" }}>
         {children}
       </p>
+    </div>
+  );
+}
+
+function ModalCentrado({ onCerrar, children }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+      onClick={onCerrar}
+    >
+      <div
+        className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto"
+        style={{ backgroundColor: "#1B2029" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -232,75 +202,384 @@ function ModalCompartir({ titulo, onCerrar }) {
     { id: "enlace", label: copiado ? "¡Enlace copiado!" : "Copiar enlace", icon: LinkIcon, color: "#3A4150" },
   ];
   return (
-    <div className="absolute inset-0 z-30 flex items-end" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} onClick={onCerrar}>
-      <div
-        className="w-full rounded-t-2xl p-5 space-y-4"
-        style={{ backgroundColor: "#1B2029" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <Etiqueta>Compartir</Etiqueta>
-            <p className="text-[13px] mt-0.5" style={{ color: "#F2ECDD" }}>
-              {titulo}
-            </p>
-          </div>
-          <button onClick={onCerrar} aria-label="Cerrar">
-            <X size={18} style={{ color: "#8A94A6" }} />
-          </button>
+    <ModalCentrado onCerrar={onCerrar}>
+      <div className="flex items-center justify-between">
+        <div>
+          <Etiqueta>Compartir</Etiqueta>
+          <p className="text-[13px] mt-0.5" style={{ color: "#F2ECDD" }}>
+            {titulo}
+          </p>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {opciones.map((op) => (
-            <button
-              key={op.id}
-              onClick={() => (op.id === "enlace" ? setCopiado(true) : null)}
-              className="flex flex-col items-center gap-2 rounded-xl py-4"
-              style={{ backgroundColor: op.color }}
-            >
-              <op.icon size={20} style={{ color: "#F2ECDD" }} />
-              <span className="text-[11px]" style={{ color: "#F2ECDD" }}>
-                {op.label}
-              </span>
-            </button>
+        <button onClick={onCerrar} aria-label="Cerrar">
+          <X size={18} style={{ color: "#8A94A6" }} />
+        </button>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {opciones.map((op) => (
+          <button
+            key={op.id}
+            onClick={() => (op.id === "enlace" ? setCopiado(true) : null)}
+            className="flex flex-col items-center gap-2 rounded-xl py-4"
+            style={{ backgroundColor: op.color }}
+          >
+            <op.icon size={20} style={{ color: "#F2ECDD" }} />
+            <span className="text-[11px]" style={{ color: "#F2ECDD" }}>
+              {op.label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </ModalCentrado>
+  );
+}
+
+function Encabezado({ categorias }) {
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  return (
+    <header className="sticky top-0 z-40 backdrop-blur border-b" style={{ backgroundColor: "rgba(18,21,28,0.9)", borderColor: "rgba(255,255,255,0.06)" }}>
+      <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+        <a href="#top" className="flex items-center gap-2">
+          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-9 w-auto object-contain" />
+        </a>
+
+        <nav className="hidden md:flex items-center gap-8">
+          {categorias.map((c) => (
+            <a key={c.slug} href={`#cat-${c.slug}`} className="text-[13px] font-medium tracking-wide" style={{ color: "#B7BFCC" }}>
+              {c.nombre}
+            </a>
           ))}
+        </nav>
+
+        <button className="md:hidden" onClick={() => setMenuAbierto(!menuAbierto)} aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}>
+          {menuAbierto ? <X size={22} style={{ color: "#F2ECDD" }} /> : <Menu size={22} style={{ color: "#F2ECDD" }} />}
+        </button>
+      </div>
+
+      {menuAbierto && (
+        <div className="md:hidden px-5 pb-5 space-y-3 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+          {categorias.map((c) => (
+            <a
+              key={c.slug}
+              href={`#cat-${c.slug}`}
+              onClick={() => setMenuAbierto(false)}
+              className="block pt-3 text-[14px] font-medium"
+              style={{ color: "#F2ECDD" }}
+            >
+              {c.nombre}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero({ configuracion, categorias }) {
+  const tieneFoto = Boolean(configuracion.hero_imagen_url);
+  const primeras = categorias.slice(0, 2);
+  const categoriaEventos = categorias.find((c) => c.tipo === "evento" && c.items.length > 0);
+  const proximaActividad = categoriaEventos?.items[0];
+
+  return (
+    <section
+      id="top"
+      className="relative px-5 pt-24 pb-16 sm:pt-36 sm:pb-24 text-center overflow-hidden min-h-[80vh] sm:min-h-[88vh] flex items-center justify-center"
+      style={
+        tieneFoto
+          ? {
+              backgroundImage: `linear-gradient(180deg, rgba(11,13,18,0.55) 0%, rgba(11,13,18,0.75) 55%, #12151C 100%), url(${configuracion.hero_imagen_url})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }
+          : { backgroundColor: "#12151C" }
+      }
+    >
+      {!tieneFoto && (
+        <>
+          <div
+            className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0) 70%)" }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-3xl pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(62,92,70,0.25) 0%, rgba(62,92,70,0) 70%)" }}
+          />
+        </>
+      )}
+
+      <div className="relative max-w-3xl mx-auto space-y-6">
+        <div className="inline-flex items-center gap-2 justify-center">
+          <Sparkles size={14} style={{ color: "#E8A33D" }} />
+          <Etiqueta>Bienvenido a nuestra comunidad</Etiqueta>
+        </div>
+        <h1 className="text-4xl sm:text-6xl leading-tight" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+          Restauración y Avivamiento
+        </h1>
+        <p className="text-[15px] sm:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: "#C7CEDA" }}>
+          Un lugar para encontrarte con Dios, crecer en comunidad y enterarte de todo lo que pasa en la iglesia, en un
+          solo lugar.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          {primeras.map((c, i) => (
+            <a
+              key={c.slug}
+              href={`#cat-${c.slug}`}
+              className={`rounded-xl px-6 py-3.5 text-[14px] font-semibold shadow-lg ${i > 0 ? "border backdrop-blur" : ""}`}
+              style={
+                i === 0
+                  ? { backgroundColor: "#E8A33D", color: "#241B0E" }
+                  : { borderColor: "rgba(255,255,255,0.25)", color: "#F2ECDD", backgroundColor: "rgba(255,255,255,0.04)" }
+              }
+            >
+              Ver {c.nombre.toLowerCase()}
+            </a>
+          ))}
+          {configuracion.ofrendas_url && (
+            <a
+              href={configuracion.ofrendas_url}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl px-6 py-3.5 text-[14px] font-semibold flex items-center gap-2"
+              style={{ backgroundColor: "#3E5C46", color: "#DCEBDF" }}
+            >
+              <HandCoins size={16} />
+              {configuracion.ofrendas_titulo || "Colaborá con la obra"}
+            </a>
+          )}
+        </div>
+
+        {proximaActividad && (
+          <div className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto backdrop-blur" style={{ backgroundColor: "rgba(27,32,41,0.85)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
+              <Calendar size={16} style={{ color: "#E8A33D" }} />
+            </div>
+            <div className="text-left">
+              <Etiqueta>Próxima actividad</Etiqueta>
+              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
+                {proximaActividad.titulo}
+                {proximaActividad.fecha && ` · ${fechaConDia(aFecha(proximaActividad.fecha))}`}
+                {proximaActividad.hora && ` · ${proximaActividad.hora}`}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function BotonRecordar({ activo, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium shrink-0"
+      style={{ backgroundColor: activo ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)", color: activo ? "#E8A33D" : "#8A94A6" }}
+    >
+      <Bell size={13} fill={activo ? "#E8A33D" : "none"} />
+      {activo ? "Recordatorio activo" : "Avisarme"}
+    </button>
+  );
+}
+
+function TarjetaEvento({ item, recordado, onRecordar }) {
+  return (
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+      <ImagenConReserva src={item.imagen_url} alt={item.titulo} className="w-full aspect-[16/10]" />
+      <div className="p-4 space-y-2 flex-1 flex flex-col">
+        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+          {item.titulo}
+        </p>
+        {(item.fecha || item.hora) && (
+          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+            <Clock size={12} />
+            {item.fecha && fechaConDia(aFecha(item.fecha))}
+            {item.fecha && item.hora && " · "}
+            {item.hora}
+          </div>
+        )}
+        {item.lugar && (
+          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+            <MapPin size={12} />
+            {item.lugar}
+          </div>
+        )}
+        {item.enlace && (
+          <a href={item.enlace} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[12px]" style={{ color: "#E8A33D" }}>
+            Más información <ArrowUpRight size={12} />
+          </a>
+        )}
+        <div className="pt-1 mt-auto">
+          <BotonRecordar activo={recordado} onClick={onRecordar} />
         </div>
       </div>
     </div>
   );
 }
 
-function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
-  const [mostrarCompartir, setMostrarCompartir] = useState(false);
-  const proximaReunion = reuniones && reuniones.length ? reuniones[0] : null;
+function SeccionEventos({ categoria, recordatorios, toggleRecordar }) {
+  const [destacado, ...resto] = categoria.items;
   return (
-    <div className="px-5 pt-6 pb-4 space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <Etiqueta>{devocional.fechaLabel}</Etiqueta>
-          <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-            Devocional del día
-          </h1>
+    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>{categoria.nombre}</Etiqueta>
+          <Titulo>Próximas actividades</Titulo>
         </div>
+
+        {categoria.items.length === 0 ? (
+          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+            Todavía no hay actividades cargadas.
+          </p>
+        ) : (
+          <>
+            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
+              <ImagenConReserva src={destacado.imagen_url} alt={destacado.titulo} className="w-full aspect-[16/10] sm:aspect-auto sm:h-full" iconSize={40} />
+              <div className="p-6 sm:p-8 flex flex-col justify-center gap-3">
+                <Etiqueta>Próxima actividad</Etiqueta>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                  {destacado.titulo}
+                </h3>
+                {(destacado.fecha || destacado.hora) && (
+                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                    <Clock size={14} />
+                    {destacado.fecha && fechaConDia(aFecha(destacado.fecha))}
+                    {destacado.fecha && destacado.hora && " · "}
+                    {destacado.hora}
+                  </div>
+                )}
+                {destacado.lugar && (
+                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                    <MapPin size={14} />
+                    {destacado.lugar}
+                  </div>
+                )}
+                {destacado.enlace && (
+                  <a href={destacado.enlace} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[13px]" style={{ color: "#E8A33D" }}>
+                    Más información <ArrowUpRight size={13} />
+                  </a>
+                )}
+                <div className="pt-1">
+                  <BotonRecordar activo={Boolean(recordatorios[destacado.id])} onClick={() => toggleRecordar(destacado.id)} />
+                </div>
+              </div>
+            </div>
+
+            {resto.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resto.map((item) => (
+                  <TarjetaEvento key={item.id} item={item} recordado={Boolean(recordatorios[item.id])} onRecordar={() => toggleRecordar(item.id)} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function TarjetaArticulo({ item }) {
+  return (
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+      <ImagenConReserva src={item.imagen_url} alt={item.titulo} className="w-full aspect-[16/10]" />
+      <div className="p-4 flex-1 flex flex-col">
+        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+          {item.titulo}
+        </p>
+        <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
+          {item.cuerpo}
+        </p>
+        {item.enlace && (
+          <a href={item.enlace} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[12px] mt-2" style={{ color: "#E8A33D" }}>
+            Ver más <ArrowUpRight size={12} />
+          </a>
+        )}
+        <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
+          {item.autor && <span>{item.autor}</span>}
+          {item.autor && <span>·</span>}
+          <span>{tiempoRelativo(aFecha(item.creado_en))}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SeccionArticulos({ categoria }) {
+  const [destacado, ...resto] = categoria.items;
+  return (
+    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>Comunidad</Etiqueta>
+          <Titulo>{categoria.nombre}</Titulo>
+        </div>
+
+        {categoria.items.length === 0 ? (
+          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+            Todavía no hay publicaciones en esta categoría.
+          </p>
+        ) : (
+          <>
+            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
+              <ImagenConReserva src={destacado.imagen_url} alt={destacado.titulo} className="w-full aspect-[16/10] sm:aspect-auto sm:h-full" iconSize={40} />
+              <div className="p-6 sm:p-8 flex flex-col justify-center gap-2">
+                <Etiqueta>Lo más reciente</Etiqueta>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                  {destacado.titulo}
+                </h3>
+                <p className="text-[14px] leading-relaxed" style={{ color: "#B7BFCC" }}>
+                  {destacado.cuerpo}
+                </p>
+                {destacado.enlace && (
+                  <a href={destacado.enlace} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[13px]" style={{ color: "#E8A33D" }}>
+                    Ver más <ArrowUpRight size={13} />
+                  </a>
+                )}
+                <div className="flex items-center gap-2 text-[12px] pt-1" style={{ color: "#5A6272" }}>
+                  {destacado.autor && <span>{destacado.autor}</span>}
+                  {destacado.autor && <span>·</span>}
+                  <span>{tiempoRelativo(aFecha(destacado.creado_en))}</span>
+                </div>
+              </div>
+            </div>
+
+            {resto.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resto.map((item) => (
+                  <TarjetaArticulo key={item.id} item={item} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function TarjetaDevocionalDia({ item, leido, setLeido, racha }) {
+  const [mostrarCompartir, setMostrarCompartir] = useState(false);
+  return (
+    <div className="max-w-2xl mx-auto space-y-4">
+      <div className="flex items-center justify-between">
+        <Etiqueta>{item.fecha ? fechaLarga(aFecha(item.fecha)) : ""}</Etiqueta>
         {racha > 0 && (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-2">
             <Flama racha={racha} />
-            <span className="text-[11px]" style={{ color: "#E8A33D" }}>
-              {racha} día{racha > 1 ? "s" : ""}
+            <span className="text-[12px]" style={{ color: "#E8A33D" }}>
+              {racha} día{racha > 1 ? "s" : ""} seguidos
             </span>
           </div>
         )}
       </div>
 
-      <div
-        className="rounded-2xl p-5 space-y-4"
-        style={{ backgroundColor: "#F7F3EA", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
-      >
+      <div className="rounded-2xl p-5 sm:p-7 space-y-4" style={{ backgroundColor: "#F7F3EA", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}>
         <div className="flex items-start justify-between">
           <div>
-            <Etiqueta>{devocional.referencia}</Etiqueta>
-            <h2 className="text-lg mt-1" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
-              {devocional.titulo}
-            </h2>
+            <Etiqueta>{item.referencia}</Etiqueta>
+            <h3 className="text-lg mt-1" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
+              {item.titulo}
+            </h3>
           </div>
           <button
             onClick={() => setMostrarCompartir(true)}
@@ -312,224 +591,48 @@ function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
           </button>
         </div>
 
-        {devocional.audioUrl && <ReproductorAudio src={devocional.audioUrl} />}
+        {item.audio_url && <ReproductorAudio src={item.audio_url} />}
 
-        <blockquote
-          className="text-[14px] leading-relaxed italic pl-3 border-l-2"
-          style={{ color: "#4A4030", borderColor: "#D9B26B" }}
-        >
-          {devocional.versiculo}
-        </blockquote>
+        {item.versiculo && (
+          <blockquote className="text-[14px] leading-relaxed italic pl-3 border-l-2" style={{ color: "#4A4030", borderColor: "#D9B26B" }}>
+            {item.versiculo}
+          </blockquote>
+        )}
 
         <div className="space-y-3 pt-1 border-t" style={{ borderColor: "#E4DCC8" }}>
-          <SeccionDevocional etiqueta="Desarrollo">{devocional.desarrollo}</SeccionDevocional>
-          <SeccionDevocional etiqueta="Oración">{devocional.oracion}</SeccionDevocional>
-          <SeccionDevocional etiqueta="Aplicación" cursiva>
-            {devocional.aplicacion}
-          </SeccionDevocional>
+          <BloqueTexto etiqueta="Desarrollo">{item.cuerpo}</BloqueTexto>
+          <BloqueTexto etiqueta="Oración">{item.oracion}</BloqueTexto>
+          <BloqueTexto etiqueta="Aplicación" cursiva>
+            {item.aplicacion}
+          </BloqueTexto>
         </div>
       </div>
 
       <button
         onClick={() => setLeido(!leido)}
         className="w-full rounded-xl py-3 flex items-center justify-center gap-2 text-[14px] font-medium transition-all"
-        style={{
-          backgroundColor: leido ? "#3E5C46" : "#E8A33D",
-          color: leido ? "#DCEBDF" : "#241B0E",
-        }}
+        style={{ backgroundColor: leido ? "#3E5C46" : "#E8A33D", color: leido ? "#DCEBDF" : "#241B0E" }}
       >
-        <Check size={16} />
+        <Sparkles size={16} />
         {leido ? "Marcado como leído" : "Marcar como leído"}
       </button>
 
-      {proximaReunion && (
-        <div>
-          <Etiqueta>Próximo</Etiqueta>
-          <div className="mt-2 rounded-xl p-4 flex items-center gap-3" style={{ backgroundColor: "#1B2029" }}>
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#2A3140" }}>
-              <Calendar size={16} style={{ color: "#E8A33D" }} />
-            </div>
-            <div className="flex-1">
-              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
-                {proximaReunion.titulo}
-              </p>
-              <p className="text-[12px]" style={{ color: "#8A94A6" }}>
-                {proximaReunion.dia} · {proximaReunion.hora}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {mostrarCompartir && (
-        <ModalCompartir titulo={devocional.titulo} onCerrar={() => setMostrarCompartir(false)} />
-      )}
+      {mostrarCompartir && <ModalCompartir titulo={item.titulo} onCerrar={() => setMostrarCompartir(false)} />}
     </div>
   );
 }
 
-function PantallaReuniones({ reuniones, toggleRecordar }) {
-  return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div>
-        <Etiqueta>Agenda</Etiqueta>
-        <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-          Reuniones
-        </h1>
-      </div>
-      <div className="space-y-3">
-        {reuniones.map((r) => (
-          <div
-            key={r.id}
-            className="rounded-xl p-4 flex items-start justify-between gap-3"
-            style={{ backgroundColor: "#1B2029" }}
-          >
-            <div className="space-y-1.5">
-              <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-                {r.titulo}
-              </p>
-              <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                <Clock size={12} />
-                {r.dia} · {r.hora}
-              </div>
-              <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                <MapPin size={12} />
-                {r.lugar}
-              </div>
-            </div>
-            <button
-              onClick={() => toggleRecordar(r.id)}
-              className="flex flex-col items-center gap-1 pt-1"
-              aria-label="Activar recordatorio"
-            >
-              <Bell
-                size={18}
-                fill={r.recordar ? "#E8A33D" : "none"}
-                style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}
-              />
-              <span className="text-[9px]" style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}>
-                {r.recordar ? "Activo" : "Avisarme"}
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PantallaNovedades({ novedades, esAdmin, setMostrarForm }) {
-  return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <Etiqueta>Comunidad</Etiqueta>
-          <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-            Novedades
-          </h1>
-        </div>
-        {esAdmin && (
-          <button
-            onClick={() => setMostrarForm(true)}
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: "#E8A33D" }}
-          >
-            <Plus size={18} style={{ color: "#241B0E" }} />
-          </button>
-        )}
-      </div>
-      <div className="space-y-3">
-        {novedades.map((n) => (
-          <div key={n.id} className="rounded-xl p-4" style={{ backgroundColor: "#1B2029" }}>
-            <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-              {n.titulo}
-            </p>
-            <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
-              {n.cuerpo}
-            </p>
-            <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
-              <span>{n.autor}</span>
-              <span>·</span>
-              <span>{n.hace}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PantallaHistorial({ historial }) {
-  const [temaActivo, setTemaActivo] = useState("Todos");
-  const [mesActivo, setMesActivo] = useState("Todos");
+function ArchivoDevocionales({ items }) {
   const [expandidoId, setExpandidoId] = useState(null);
 
-  const temas = ["Todos", ...Array.from(new Set(historial.map((d) => d.tema)))];
-  const meses = ["Todos", ...Array.from(new Set(historial.map((d) => d.mes)))];
-
-  const filtrados = historial.filter(
-    (d) => (temaActivo === "Todos" || d.tema === temaActivo) && (mesActivo === "Todos" || d.mes === mesActivo)
-  );
-
   return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div>
-        <Etiqueta>Archivo</Etiqueta>
-        <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-          Historial
-        </h1>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-        {temas.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTemaActivo(t)}
-            className="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium"
-            style={{
-              backgroundColor: temaActivo === t ? "#E8A33D" : "#1B2029",
-              color: temaActivo === t ? "#241B0E" : "#8A94A6",
-            }}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      <div className="relative">
-        <select
-          value={mesActivo}
-          onChange={(e) => setMesActivo(e.target.value)}
-          className="w-full appearance-none rounded-xl px-3 py-2.5 text-[13px] pr-9"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
-        >
-          {meses.map((m) => (
-            <option key={m} value={m}>
-              {m === "Todos" ? "Todos los meses" : m}
-            </option>
-          ))}
-        </select>
-        <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8A94A6" }} />
-      </div>
-
-      <div className="space-y-2.5">
-        {filtrados.length === 0 && (
-          <p className="text-[13px] text-center py-8" style={{ color: "#5A6272" }}>
-            No hay devocionales para este filtro.
-          </p>
-        )}
-        {filtrados.map((d) => {
+    <div className="max-w-4xl mx-auto space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {items.map((d) => {
           const abierto = expandidoId === d.id;
           return (
-            <div
-              key={d.id}
-              className="rounded-xl overflow-hidden"
-              style={{ backgroundColor: "#1B2029" }}
-            >
-              <button
-                onClick={() => setExpandidoId(abierto ? null : d.id)}
-                className="w-full flex items-center justify-between px-4 py-3 text-left"
-              >
+            <div key={d.id} className="rounded-xl overflow-hidden self-start" style={{ backgroundColor: "#1B2029" }}>
+              <button onClick={() => setExpandidoId(abierto ? null : d.id)} className="w-full flex items-center justify-between px-4 py-3 text-left gap-2">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
                     <BookOpen size={15} style={{ color: "#E8A33D" }} />
@@ -539,22 +642,21 @@ function PantallaHistorial({ historial }) {
                       {d.titulo}
                     </p>
                     <p className="text-[11px]" style={{ color: "#8A94A6" }}>
-                      {d.fechaLabel || d.fecha} · {d.tema} · {d.referencia}
+                      {d.fecha ? fechaConDia(aFecha(d.fecha)) : ""} {d.referencia && `· ${d.referencia}`}
                     </p>
                   </div>
                 </div>
-                <ChevronDown
-                  size={15}
-                  style={{ color: "#5A6272", transform: abierto ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
-                />
+                <ChevronDown size={15} className="shrink-0" style={{ color: "#5A6272", transform: abierto ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {abierto && (
                 <div className="px-4 pb-4 space-y-2">
-                  <blockquote className="text-[13px] italic pl-3 border-l-2" style={{ color: "#C9B892", borderColor: "#E8A33D" }}>
-                    {d.versiculo}
-                  </blockquote>
+                  {d.versiculo && (
+                    <blockquote className="text-[13px] italic pl-3 border-l-2" style={{ color: "#C9B892", borderColor: "#E8A33D" }}>
+                      {d.versiculo}
+                    </blockquote>
+                  )}
                   <p className="text-[12px] leading-relaxed" style={{ color: "#B7BFCC" }}>
-                    {d.extracto}
+                    {d.cuerpo}
                   </p>
                 </div>
               )}
@@ -566,62 +668,117 @@ function PantallaHistorial({ historial }) {
   );
 }
 
-function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
-  const [titulo, setTitulo] = useState("");
-  const [cuerpo, setCuerpo] = useState("");
+function elegirItemDeHoy(items) {
+  const hoy = new Date();
+  hoy.setUTCHours(23, 59, 59, 999);
+  const pasados = items.filter((d) => d.fecha && new Date(d.fecha).getTime() <= hoy.getTime());
+  if (pasados.length) return pasados[0];
+  return items[0] || null;
+}
+
+function SeccionDevocional({ categoria, leido, setLeido, racha }) {
+  const [mostrarArchivo, setMostrarArchivo] = useState(false);
+  const hoy = elegirItemDeHoy(categoria.items);
+  const archivo = categoria.items.filter((i) => i.id !== hoy?.id);
+
   return (
-    <div className="absolute inset-0 z-20 flex flex-col" style={{ backgroundColor: "#12151C" }}>
-      <div className="flex items-center gap-3 px-5 pt-6 pb-4">
-        <button onClick={onCerrar} aria-label="Cerrar">
-          <X size={20} style={{ color: "#F2ECDD" }} />
-        </button>
-        <h2 className="text-[15px] font-medium" style={{ color: "#F2ECDD" }}>
-          Nueva novedad
-        </h2>
+    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+      <div className="space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>Cada día</Etiqueta>
+          <Titulo>{categoria.nombre}</Titulo>
+        </div>
+
+        {!hoy ? (
+          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+            Todavía no hay devocionales cargados.
+          </p>
+        ) : (
+          <>
+            <TarjetaDevocionalDia item={hoy} leido={leido} setLeido={setLeido} racha={racha} />
+            {archivo.length > 0 && (
+              <div className="text-center">
+                <button
+                  onClick={() => setMostrarArchivo(!mostrarArchivo)}
+                  className="text-[13px] font-medium underline underline-offset-4"
+                  style={{ color: "#E8A33D" }}
+                >
+                  {mostrarArchivo ? "Ocultar archivo de devocionales" : "Ver archivo de devocionales anteriores"}
+                </button>
+              </div>
+            )}
+            {mostrarArchivo && <ArchivoDevocionales items={archivo} />}
+          </>
+        )}
       </div>
-      <div className="px-5 space-y-3 flex-1">
-        <input
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          placeholder="Título"
-          className="w-full rounded-lg px-3 py-2.5 text-[14px] outline-none"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
-        />
-        <textarea
-          value={cuerpo}
-          onChange={(e) => setCuerpo(e.target.value)}
-          placeholder="¿Qué querés anunciar?"
-          rows={5}
-          className="w-full rounded-lg px-3 py-2.5 text-[14px] outline-none resize-none"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
-        />
+    </section>
+  );
+}
+
+function Footer({ configuracion }) {
+  const redes = [
+    { url: configuracion.contacto_instagram, icon: Instagram, label: "Instagram" },
+    { url: configuracion.contacto_facebook, icon: Facebook, label: "Facebook" },
+    { url: configuracion.contacto_youtube, icon: Youtube, label: "YouTube" },
+  ].filter((r) => r.url);
+
+  return (
+    <footer className="px-5 pt-12 pb-8 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+      <div className="max-w-6xl mx-auto flex flex-col items-center gap-5 text-center">
+        <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-12 w-auto object-contain" />
+
+        {configuracion.contacto_direccion && (
+          <a href={configuracion.contacto_mapa_url || undefined} className="flex items-center gap-1.5 text-[13px]" style={{ color: "#8A94A6" }}>
+            <MapPin size={14} />
+            {configuracion.contacto_direccion}
+          </a>
+        )}
+
+        {redes.length > 0 && (
+          <div className="flex items-center gap-4">
+            {redes.map((r) => (
+              <a key={r.label} href={r.url} aria-label={r.label} style={{ color: "#8A94A6" }}>
+                <r.icon size={20} />
+              </a>
+            ))}
+          </div>
+        )}
+
+        <p className="text-[11px]" style={{ color: "#5A6272" }}>
+          © {new Date().getFullYear()} Restauración y Avivamiento
+        </p>
+
+        <a href="/admin" className="flex items-center gap-1 text-[10px]" style={{ color: "#3A4150" }}>
+          <Settings size={10} />
+          Acceso administrador
+        </a>
       </div>
-      <div className="px-5 pb-6">
-        <button
-          onClick={() => {
-            if (titulo.trim()) onPublicar(titulo, cuerpo);
-          }}
-          className="w-full rounded-xl py-3 text-[14px] font-medium"
-          style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
-        >
-          Publicar
-        </button>
-      </div>
-    </div>
+    </footer>
+  );
+}
+
+function BotonWhatsApp({ configuracion }) {
+  if (!configuracion.contacto_whatsapp) return null;
+  return (
+    <a
+      href={configuracion.contacto_whatsapp}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-5 right-5 z-30 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+      style={{ backgroundColor: "#3E5C46" }}
+      aria-label="Escribinos por WhatsApp"
+    >
+      <MessageCircle size={22} style={{ color: "#F2ECDD" }} />
+    </a>
   );
 }
 
 export default function AppRestauracion() {
-  const [tab, setTab] = useState("inicio");
+  const [datos, setDatos] = useState(null);
+  const [error, setError] = useState(false);
   const [leido, setLeido] = useState(false);
   const [racha, setRacha] = useState(0);
-  const [devocional, setDevocional] = useState(DEVOCIONAL_EJEMPLO);
-  const [historial, setHistorial] = useState(HISTORIAL_EJEMPLO);
-  const [reuniones, setReuniones] = useState(REUNIONES_EJEMPLO);
-  const [novedades, setNovedades] = useState(NOVEDADES_EJEMPLO);
-  const [usandoEjemplo, setUsandoEjemplo] = useState(true);
-  const [esAdmin, setEsAdmin] = useState(false);
-  const [mostrarForm, setMostrarForm] = useState(false);
+  const [recordatorios, setRecordatorios] = useState({});
 
   useEffect(() => {
     const { racha: r, leidoHoy } = cargarRacha();
@@ -631,41 +788,13 @@ export default function AppRestauracion() {
 
   useEffect(() => {
     let activo = true;
-    async function cargarDatos() {
-      const [filasDevo, filasReu, filasNov] = await Promise.all([
-        fetchSheet("/api/devocionales"),
-        fetchSheet("/api/reuniones"),
-        fetchSheet("/api/novedades"),
-      ]);
-      if (!activo) return;
-      let huboDatosReales = false;
-
-      if (filasDevo && filasDevo.length) {
-        const mapeados = filasDevo.map(mapDevocional).filter((d) => d.titulo);
-        if (mapeados.length) {
-          const ordenados = [...mapeados].sort((a, b) => (b.fecha || 0) - (a.fecha || 0));
-          setHistorial(ordenados);
-          setDevocional(elegirDevocionalDeHoy(mapeados) || ordenados[0]);
-          huboDatosReales = true;
-        }
-      }
-      if (filasReu && filasReu.length) {
-        const mapeados = filasReu.map(mapReunion).filter((r) => r.titulo);
-        if (mapeados.length) {
-          setReuniones(mapeados.sort((a, b) => (a.fecha || 0) - (b.fecha || 0)));
-          huboDatosReales = true;
-        }
-      }
-      if (filasNov && filasNov.length) {
-        const mapeados = filasNov.map(mapNovedad).filter((n) => n.titulo).reverse();
-        if (mapeados.length) {
-          setNovedades(mapeados);
-          huboDatosReales = true;
-        }
-      }
-      setUsandoEjemplo(!huboDatosReales);
-    }
-    cargarDatos();
+    fetch("/api/sitio")
+      .then((r) => {
+        if (!r.ok) throw new Error("respuesta no ok");
+        return r.json();
+      })
+      .then((d) => activo && setDatos(d))
+      .catch(() => activo && setError(true));
     return () => {
       activo = false;
     };
@@ -678,94 +807,46 @@ export default function AppRestauracion() {
   };
 
   const toggleRecordar = (id) => {
-    setReuniones(reuniones.map((r) => (r.id === id ? { ...r, recordar: !r.recordar } : r)));
+    setRecordatorios((r) => ({ ...r, [id]: !r[id] }));
   };
 
-  const publicarNovedad = (titulo, cuerpo) => {
-    setNovedades([{ id: Date.now(), titulo, cuerpo: cuerpo || "—", autor: "Vos (admin)", hace: "ahora" }, ...novedades]);
-    setMostrarForm(false);
-  };
-
-  const tabs = [
-    { id: "inicio", label: "Inicio", icon: Flame },
-    { id: "reuniones", label: "Reuniones", icon: Calendar },
-    { id: "novedades", label: "Novedades", icon: Newspaper },
-    { id: "historial", label: "Historial", icon: BookOpen },
-  ];
-
-  return (
-    <div className="min-h-screen flex items-center justify-center py-8" style={{ backgroundColor: "#0B0D12" }}>
-      <div
-        className="relative w-[375px] h-[720px] rounded-[2.5rem] overflow-hidden border-[6px]"
-        style={{ backgroundColor: "#12151C", borderColor: "#000000" }}
-      >
-        {/* barra superior */}
-        <div className="flex items-center justify-end px-5 pt-3 pb-1">
-          <button
-            onClick={() => setEsAdmin(!esAdmin)}
-            className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full"
-            style={{
-              backgroundColor: esAdmin ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)",
-              color: esAdmin ? "#E8A33D" : "#8A94A6",
-            }}
-          >
-            <Settings size={11} />
-            {esAdmin ? "Modo admin" : "Modo lector"}
-          </button>
-        </div>
-
-        {esAdmin && usandoEjemplo && (
-          <div className="mx-5 mb-1 px-3 py-1.5 rounded-lg text-[10px] text-center" style={{ backgroundColor: "rgba(193,80,46,0.15)", color: "#E0876A" }}>
-            Mostrando contenido de ejemplo — conectá las planillas en config.js
-          </div>
-        )}
-
-        {/* encabezado con logo */}
-        <div className="flex items-center justify-center pt-2 pb-1">
-          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain" />
-        </div>
-
-        <div className="overflow-y-auto" style={{ height: "calc(100% - 196px)" }}>
-          {tab === "inicio" && (
-            <PantallaInicio
-              leido={leido}
-              setLeido={marcarLeido}
-              racha={racha}
-              devocional={devocional}
-              reuniones={reuniones}
-            />
-          )}
-          {tab === "reuniones" && <PantallaReuniones reuniones={reuniones} toggleRecordar={toggleRecordar} />}
-          {tab === "novedades" && (
-            <PantallaNovedades novedades={novedades} esAdmin={esAdmin} setMostrarForm={setMostrarForm} />
-          )}
-          {tab === "historial" && <PantallaHistorial historial={historial} />}
-        </div>
-
-        {mostrarForm && (
-          <FormularioNuevaNovedad onCerrar={() => setMostrarForm(false)} onPublicar={publicarNovedad} />
-        )}
-
-        {/* nav inferior */}
-        <div
-          className="absolute bottom-0 left-0 right-0 flex items-center justify-around pt-3 pb-6 border-t"
-          style={{ backgroundColor: "#12151C", borderColor: "rgba(255,255,255,0.06)" }}
-        >
-          {tabs.map(({ id, label, icon: Icon }) => (
-            <button key={id} onClick={() => setTab(id)} className="flex flex-col items-center gap-1">
-              <Icon
-                size={20}
-                strokeWidth={1.8}
-                style={{ color: tab === id ? "#E8A33D" : "#5A6272" }}
-                fill={tab === id && id === "inicio" ? "rgba(232,163,61,0.3)" : "none"}
-              />
-              <span className="text-[10px]" style={{ color: tab === id ? "#E8A33D" : "#5A6272" }}>
-                {label}
-              </span>
-            </button>
-          ))}
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-5 text-center" style={{ backgroundColor: "#12151C" }}>
+        <div>
+          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain mx-auto mb-4" />
+          <p style={{ color: "#8A94A6" }}>El sitio se está configurando. Volvé a intentar en un rato.</p>
         </div>
       </div>
+    );
+  }
+
+  if (!datos) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#12151C" }}>
+        <p style={{ color: "#8A94A6" }}>Cargando...</p>
+      </div>
+    );
+  }
+
+  const { categorias, configuracion } = datos;
+
+  return (
+    <div style={{ backgroundColor: "#12151C" }}>
+      <Encabezado categorias={categorias} />
+
+      <main>
+        <Hero configuracion={configuracion} categorias={categorias} />
+        {categorias.map((c) => {
+          if (c.tipo === "evento") return <SeccionEventos key={c.id} categoria={c} recordatorios={recordatorios} toggleRecordar={toggleRecordar} />;
+          if (c.tipo === "articulo") return <SeccionArticulos key={c.id} categoria={c} />;
+          if (c.tipo === "devocional") return <SeccionDevocional key={c.id} categoria={c} leido={leido} setLeido={marcarLeido} racha={racha} />;
+          return null;
+        })}
+      </main>
+
+      <Footer configuracion={configuracion} />
+      <BotonWhatsApp configuracion={configuracion} />
     </div>
   );
 }
