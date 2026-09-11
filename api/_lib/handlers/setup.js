@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { query } from "../_lib/db.js";
-import { firmarSesion, setCookieSesion } from "../_lib/auth.js";
+import { query } from "../db.js";
+import { firmarSesion, setCookieSesion } from "../auth.js";
 
 // Crea el primer administrador. Solo funciona mientras no exista ninguno
 // (así se puede dejar la ruta pública sin abrir un agujero de seguridad).

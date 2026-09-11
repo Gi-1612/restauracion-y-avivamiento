@@ -1,5 +1,5 @@
 import { handleUpload } from "@vercel/blob/client";
-import { exigirSesion } from "../_lib/auth.js";
+import { exigirSesion } from "../auth.js";
 
 // El navegador sube el archivo directo a Vercel Blob; esta ruta solo autoriza
 // la subida (así los archivos no pasan por nuestra función serverless).
