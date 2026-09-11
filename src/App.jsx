@@ -9,7 +9,7 @@ import {
   Plus,
   Clock,
   MapPin,
-  ChevronLeft,
+  Menu,
   X,
   Play,
   Pause,
@@ -18,20 +18,31 @@ import {
   ChevronDown,
   MessageCircle,
   Link as LinkIcon,
+  Instagram,
+  Facebook,
+  Youtube,
 } from "lucide-react";
 import { fetchSheet, mapDevocional, mapReunion, mapNovedad, elegirDevocionalDeHoy, cargarRacha, alternarLecturaDeHoy } from "./lib/sheets";
+import {
+  CONTACTO_DIRECCION,
+  CONTACTO_MAPA_URL,
+  CONTACTO_WHATSAPP,
+  CONTACTO_INSTAGRAM,
+  CONTACTO_FACEBOOK,
+  CONTACTO_YOUTUBE,
+} from "./config";
 
 const LOGO_IGLESIA = "/logo.png";
 
 const HISTORIAL_EJEMPLO = [
-  { id: 1, fecha: "13 jul", fechaLabel: "13 jul", mes: "Julio", tema: "Perseverancia", referencia: "Juan 15:5", titulo: "Permanecer en la Vid", versiculo: "\u201cYo soy la vid, vosotros los pámpanos…\u201d", extracto: "El fruto llega como consecuencia de permanecer conectados, no del esfuerzo aislado." },
-  { id: 2, fecha: "12 jul", fechaLabel: "12 jul", mes: "Julio", tema: "Perseverancia", referencia: "Hebreos 10:36", titulo: "La Paciencia que Sostiene", versiculo: "\u201cVosotros tenéis necesidad de paciencia…\u201d", extracto: "La promesa se recibe después de haber hecho la voluntad de Dios, no antes." },
-  { id: 3, fecha: "10 jul", fechaLabel: "10 jul", mes: "Julio", tema: "Fe", referencia: "Marcos 11:24", titulo: "Pedir Creyendo", versiculo: "\u201cTodo lo que pidiereis orando, creed que lo recibiréis…\u201d", extracto: "La fe no es negar la dificultad, es confiar en Quién la puede resolver." },
-  { id: 4, fecha: "8 jul", fechaLabel: "8 jul", mes: "Julio", tema: "Restauración", referencia: "Joel 2:25", titulo: "Los Años que la Oruga Comió", versiculo: "\u201cY os restituiré los años que comió la oruga…\u201d", extracto: "Dios no solo perdona: también restaura lo que el tiempo perdido se llevó." },
-  { id: 5, fecha: "29 jun", fechaLabel: "29 jun", mes: "Junio", tema: "Gracia", referencia: "Efesios 2:8", titulo: "Salvos por Gracia", versiculo: "\u201cPorque por gracia sois salvos, por medio de la fe…\u201d", extracto: "No hay mérito propio que alcance: todo es don, y eso nos libera." },
-  { id: 6, fecha: "22 jun", fechaLabel: "22 jun", mes: "Junio", tema: "Fe", referencia: "Hebreos 11:1", titulo: "La Certeza de lo que se Espera", versiculo: "\u201cEs, pues, la fe la certeza de lo que se espera…\u201d", extracto: "Creer no es ver primero: es sostenerse en lo que Dios ya prometió." },
-  { id: 7, fecha: "15 jun", fechaLabel: "15 jun", mes: "Junio", tema: "Restauración", referencia: "Isaías 61:3", titulo: "Gloria en Vez de Ceniza", versiculo: "\u201c…para ordenar que a los afligidos de Sion se les dé gloria en lugar de ceniza…\u201d", extracto: "Donde hubo pérdida, Dios promete un intercambio: belleza a cambio de ceniza." },
-  { id: 8, fecha: "8 jun", fechaLabel: "8 jun", mes: "Junio", tema: "Gracia", referencia: "2 Corintios 12:9", titulo: "Poder en la Debilidad", versiculo: "\u201cBástate mi gracia; porque mi poder se perfecciona en la debilidad…\u201d", extracto: "La debilidad no es un obstáculo para Dios: es el lugar donde su poder se nota más." },
+  { id: 1, fecha: "13 jul", fechaLabel: "13 jul", mes: "Julio", tema: "Perseverancia", referencia: "Juan 15:5", titulo: "Permanecer en la Vid", versiculo: "“Yo soy la vid, vosotros los pámpanos…”", extracto: "El fruto llega como consecuencia de permanecer conectados, no del esfuerzo aislado." },
+  { id: 2, fecha: "12 jul", fechaLabel: "12 jul", mes: "Julio", tema: "Perseverancia", referencia: "Hebreos 10:36", titulo: "La Paciencia que Sostiene", versiculo: "“Vosotros tenéis necesidad de paciencia…”", extracto: "La promesa se recibe después de haber hecho la voluntad de Dios, no antes." },
+  { id: 3, fecha: "10 jul", fechaLabel: "10 jul", mes: "Julio", tema: "Fe", referencia: "Marcos 11:24", titulo: "Pedir Creyendo", versiculo: "“Todo lo que pidiereis orando, creed que lo recibiréis…”", extracto: "La fe no es negar la dificultad, es confiar en Quién la puede resolver." },
+  { id: 4, fecha: "8 jul", fechaLabel: "8 jul", mes: "Julio", tema: "Restauración", referencia: "Joel 2:25", titulo: "Los Años que la Oruga Comió", versiculo: "“Y os restituiré los años que comió la oruga…”", extracto: "Dios no solo perdona: también restaura lo que el tiempo perdido se llevó." },
+  { id: 5, fecha: "29 jun", fechaLabel: "29 jun", mes: "Junio", tema: "Gracia", referencia: "Efesios 2:8", titulo: "Salvos por Gracia", versiculo: "“Porque por gracia sois salvos, por medio de la fe…”", extracto: "No hay mérito propio que alcance: todo es don, y eso nos libera." },
+  { id: 6, fecha: "22 jun", fechaLabel: "22 jun", mes: "Junio", tema: "Fe", referencia: "Hebreos 11:1", titulo: "La Certeza de lo que se Espera", versiculo: "“Es, pues, la fe la certeza de lo que se espera…”", extracto: "Creer no es ver primero: es sostenerse en lo que Dios ya prometió." },
+  { id: 7, fecha: "15 jun", fechaLabel: "15 jun", mes: "Junio", tema: "Restauración", referencia: "Isaías 61:3", titulo: "Gloria en Vez de Ceniza", versiculo: "“…para ordenar que a los afligidos de Sion se les dé gloria en lugar de ceniza…”", extracto: "Donde hubo pérdida, Dios promete un intercambio: belleza a cambio de ceniza." },
+  { id: 8, fecha: "8 jun", fechaLabel: "8 jun", mes: "Junio", tema: "Gracia", referencia: "2 Corintios 12:9", titulo: "Poder en la Debilidad", versiculo: "“Bástate mi gracia; porque mi poder se perfecciona en la debilidad…”", extracto: "La debilidad no es un obstáculo para Dios: es el lugar donde su poder se nota más." },
 ];
 
 const DEVOCIONAL_EJEMPLO = {
@@ -39,7 +50,7 @@ const DEVOCIONAL_EJEMPLO = {
   referencia: "Juan 15:5 (RVR1960)",
   titulo: "Permanecer en la Vid",
   versiculo:
-    "\u201cYo soy la vid, vosotros los pámpanos; el que permanece en mí… este lleva mucho fruto; porque separados de mí nada podéis hacer.\u201d",
+    "“Yo soy la vid, vosotros los pámpanos; el que permanece en mí… este lleva mucho fruto; porque separados de mí nada podéis hacer.”",
   desarrollo:
     "Jesús se presenta como la vid verdadera: la vida y el fruto no nacen del esfuerzo aislado, sino de mantenerse unidos a Él día a día. Un pámpano no lucha por dar fruto; simplemente permanece conectado, y el fruto llega como consecuencia natural de esa conexión. Muchas veces medimos nuestra vida espiritual por cuánto hacemos, cuando en realidad se mide por cuánto permanecemos.",
   oracion:
@@ -80,6 +91,12 @@ const NOVEDADES_EJEMPLO = [
   },
 ];
 
+const NAV_LINKS = [
+  { href: "#agenda", label: "Agenda" },
+  { href: "#novedades", label: "Novedades" },
+  { href: "#devocional", label: "Devocional" },
+];
+
 function Flama({ racha }) {
   const intensidad = Math.min(racha / 30, 1);
   return (
@@ -106,6 +123,17 @@ function Etiqueta({ children }) {
     <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: "#8A94A6" }}>
       {children}
     </span>
+  );
+}
+
+function Titulo({ children }) {
+  return (
+    <h2
+      className="text-2xl sm:text-3xl mt-1.5"
+      style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}
+    >
+      {children}
+    </h2>
   );
 }
 
@@ -211,7 +239,7 @@ function ReproductorAudio({ src }) {
   );
 }
 
-function SeccionDevocional({ etiqueta, children, cursiva }) {
+function SeccionDevocionalTexto({ etiqueta, children, cursiva }) {
   return (
     <div>
       <Etiqueta>{etiqueta}</Etiqueta>
@@ -225,6 +253,24 @@ function SeccionDevocional({ etiqueta, children, cursiva }) {
   );
 }
 
+function ModalCentrado({ onCerrar, children }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+      onClick={onCerrar}
+    >
+      <div
+        className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto"
+        style={{ backgroundColor: "#1B2029" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function ModalCompartir({ titulo, onCerrar }) {
   const [copiado, setCopiado] = useState(false);
   const opciones = [
@@ -232,75 +278,321 @@ function ModalCompartir({ titulo, onCerrar }) {
     { id: "enlace", label: copiado ? "¡Enlace copiado!" : "Copiar enlace", icon: LinkIcon, color: "#3A4150" },
   ];
   return (
-    <div className="absolute inset-0 z-30 flex items-end" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} onClick={onCerrar}>
-      <div
-        className="w-full rounded-t-2xl p-5 space-y-4"
-        style={{ backgroundColor: "#1B2029" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <Etiqueta>Compartir</Etiqueta>
-            <p className="text-[13px] mt-0.5" style={{ color: "#F2ECDD" }}>
-              {titulo}
-            </p>
-          </div>
-          <button onClick={onCerrar} aria-label="Cerrar">
-            <X size={18} style={{ color: "#8A94A6" }} />
-          </button>
+    <ModalCentrado onCerrar={onCerrar}>
+      <div className="flex items-center justify-between">
+        <div>
+          <Etiqueta>Compartir</Etiqueta>
+          <p className="text-[13px] mt-0.5" style={{ color: "#F2ECDD" }}>
+            {titulo}
+          </p>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {opciones.map((op) => (
-            <button
-              key={op.id}
-              onClick={() => (op.id === "enlace" ? setCopiado(true) : null)}
-              className="flex flex-col items-center gap-2 rounded-xl py-4"
-              style={{ backgroundColor: op.color }}
-            >
-              <op.icon size={20} style={{ color: "#F2ECDD" }} />
-              <span className="text-[11px]" style={{ color: "#F2ECDD" }}>
-                {op.label}
-              </span>
-            </button>
-          ))}
-        </div>
+        <button onClick={onCerrar} aria-label="Cerrar">
+          <X size={18} style={{ color: "#8A94A6" }} />
+        </button>
       </div>
-    </div>
+      <div className="grid grid-cols-2 gap-3">
+        {opciones.map((op) => (
+          <button
+            key={op.id}
+            onClick={() => (op.id === "enlace" ? setCopiado(true) : null)}
+            className="flex flex-col items-center gap-2 rounded-xl py-4"
+            style={{ backgroundColor: op.color }}
+          >
+            <op.icon size={20} style={{ color: "#F2ECDD" }} />
+            <span className="text-[11px]" style={{ color: "#F2ECDD" }}>
+              {op.label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </ModalCentrado>
   );
 }
 
-function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
-  const [mostrarCompartir, setMostrarCompartir] = useState(false);
-  const proximaReunion = reuniones && reuniones.length ? reuniones[0] : null;
+function Encabezado({ esAdmin, setEsAdmin }) {
+  const [menuAbierto, setMenuAbierto] = useState(false);
   return (
-    <div className="px-5 pt-6 pb-4 space-y-5">
+    <header
+      className="sticky top-0 z-40 backdrop-blur border-b"
+      style={{ backgroundColor: "rgba(18,21,28,0.9)", borderColor: "rgba(255,255,255,0.06)" }}
+    >
+      <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+        <a href="#top" className="flex items-center gap-2">
+          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-9 w-auto object-contain" />
+        </a>
+
+        <nav className="hidden md:flex items-center gap-8">
+          {NAV_LINKS.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-[13px] font-medium tracking-wide"
+              style={{ color: "#B7BFCC" }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setEsAdmin(!esAdmin)}
+            className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full"
+            style={{
+              backgroundColor: esAdmin ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)",
+              color: esAdmin ? "#E8A33D" : "#8A94A6",
+            }}
+          >
+            <Settings size={11} />
+            {esAdmin ? "Modo admin" : "Modo lector"}
+          </button>
+        </div>
+
+        <button
+          className="md:hidden"
+          onClick={() => setMenuAbierto(!menuAbierto)}
+          aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
+        >
+          {menuAbierto ? (
+            <X size={22} style={{ color: "#F2ECDD" }} />
+          ) : (
+            <Menu size={22} style={{ color: "#F2ECDD" }} />
+          )}
+        </button>
+      </div>
+
+      {menuAbierto && (
+        <div className="md:hidden px-5 pb-5 space-y-3 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+          {NAV_LINKS.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMenuAbierto(false)}
+              className="block pt-3 text-[14px] font-medium"
+              style={{ color: "#F2ECDD" }}
+            >
+              {l.label}
+            </a>
+          ))}
+          <button
+            onClick={() => {
+              setEsAdmin(!esAdmin);
+              setMenuAbierto(false);
+            }}
+            className="flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full mt-2"
+            style={{
+              backgroundColor: esAdmin ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)",
+              color: esAdmin ? "#E8A33D" : "#8A94A6",
+            }}
+          >
+            <Settings size={12} />
+            {esAdmin ? "Modo admin" : "Modo lector"}
+          </button>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero({ proximaReunion }) {
+  return (
+    <section
+      id="top"
+      className="px-5 pt-16 pb-14 sm:pt-24 sm:pb-20 text-center"
+      style={{
+        background: "radial-gradient(ellipse at top, rgba(232,163,61,0.12) 0%, rgba(18,21,28,0) 60%)",
+      }}
+    >
+      <div className="max-w-3xl mx-auto space-y-6">
+        <Etiqueta>Bienvenido a nuestra comunidad</Etiqueta>
+        <h1
+          className="text-4xl sm:text-5xl leading-tight"
+          style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}
+        >
+          Restauración y Avivamiento
+        </h1>
+        <p className="text-[15px] sm:text-base leading-relaxed max-w-xl mx-auto" style={{ color: "#B7BFCC" }}>
+          Un lugar para encontrarte con Dios, crecer en comunidad y enterarte de todo lo que pasa en la iglesia:
+          reuniones, actividades y novedades, en un solo lugar.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <a
+            href="#agenda"
+            className="rounded-xl px-5 py-3 text-[14px] font-medium"
+            style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
+          >
+            Ver agenda de actividades
+          </a>
+          <a
+            href="#novedades"
+            className="rounded-xl px-5 py-3 text-[14px] font-medium border"
+            style={{ borderColor: "rgba(255,255,255,0.15)", color: "#F2ECDD" }}
+          >
+            Ver novedades
+          </a>
+        </div>
+
+        {proximaReunion && (
+          <div
+            className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto"
+            style={{ backgroundColor: "#1B2029" }}
+          >
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
+              <Calendar size={16} style={{ color: "#E8A33D" }} />
+            </div>
+            <div className="text-left">
+              <Etiqueta>Próxima actividad</Etiqueta>
+              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
+                {proximaReunion.titulo} · {proximaReunion.dia} · {proximaReunion.hora}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function SeccionAgenda({ reuniones, toggleRecordar }) {
+  return (
+    <section id="agenda" className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>Agenda</Etiqueta>
+          <Titulo>Próximas actividades</Titulo>
+          <p className="text-[14px] mt-2" style={{ color: "#8A94A6" }}>
+            Cultos, escuelas y encuentros de la comunidad. Activá el recordatorio para no perdértelos.
+          </p>
+        </div>
+        {reuniones.length === 0 ? (
+          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+            Todavía no hay actividades cargadas.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {reuniones.map((r) => (
+              <div
+                key={r.id}
+                className="rounded-xl p-4 flex items-start justify-between gap-3"
+                style={{ backgroundColor: "#1B2029" }}
+              >
+                <div className="space-y-1.5">
+                  <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+                    {r.titulo}
+                  </p>
+                  <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+                    <Clock size={12} />
+                    {r.dia} · {r.hora}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+                    <MapPin size={12} />
+                    {r.lugar}
+                  </div>
+                </div>
+                <button
+                  onClick={() => toggleRecordar(r.id)}
+                  className="flex flex-col items-center gap-1 pt-1 shrink-0"
+                  aria-label="Activar recordatorio"
+                >
+                  <Bell
+                    size={18}
+                    fill={r.recordar ? "#E8A33D" : "none"}
+                    style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}
+                  />
+                  <span className="text-[9px]" style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}>
+                    {r.recordar ? "Activo" : "Avisarme"}
+                  </span>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function SeccionNovedades({ novedades, esAdmin, setMostrarForm }) {
+  return (
+    <section id="novedades" className="px-5 py-14 sm:py-20 scroll-mt-16">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex items-center justify-between max-w-xl mx-auto">
+          <div className="text-center flex-1">
+            <Etiqueta>Comunidad</Etiqueta>
+            <Titulo>Novedades</Titulo>
+          </div>
+        </div>
+        <p className="text-center text-[14px] max-w-xl mx-auto -mt-3" style={{ color: "#8A94A6" }}>
+          Todo lo que queremos contarte: inscripciones, cambios de horario y anuncios de la iglesia.
+        </p>
+        {esAdmin && (
+          <div className="flex justify-center">
+            <button
+              onClick={() => setMostrarForm(true)}
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium"
+              style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
+            >
+              <Plus size={16} />
+              Publicar novedad
+            </button>
+          </div>
+        )}
+        {novedades.length === 0 ? (
+          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+            Todavía no hay novedades publicadas.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {novedades.map((n) => (
+              <div key={n.id} className="rounded-xl p-4" style={{ backgroundColor: "#1B2029" }}>
+                <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+                  {n.titulo}
+                </p>
+                <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
+                  {n.cuerpo}
+                </p>
+                <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
+                  <span>{n.autor}</span>
+                  <span>·</span>
+                  <span>{n.hace}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function TarjetaDevocionalDia({ devocional, leido, setLeido, racha }) {
+  const [mostrarCompartir, setMostrarCompartir] = useState(false);
+  return (
+    <div className="max-w-2xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <Etiqueta>{devocional.fechaLabel}</Etiqueta>
-          <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-            Devocional del día
-          </h1>
         </div>
         {racha > 0 && (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-2">
             <Flama racha={racha} />
-            <span className="text-[11px]" style={{ color: "#E8A33D" }}>
-              {racha} día{racha > 1 ? "s" : ""}
+            <span className="text-[12px]" style={{ color: "#E8A33D" }}>
+              {racha} día{racha > 1 ? "s" : ""} seguidos
             </span>
           </div>
         )}
       </div>
 
       <div
-        className="rounded-2xl p-5 space-y-4"
+        className="rounded-2xl p-5 sm:p-7 space-y-4"
         style={{ backgroundColor: "#F7F3EA", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}
       >
         <div className="flex items-start justify-between">
           <div>
             <Etiqueta>{devocional.referencia}</Etiqueta>
-            <h2 className="text-lg mt-1" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
+            <h3 className="text-lg mt-1" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
               {devocional.titulo}
-            </h2>
+            </h3>
           </div>
           <button
             onClick={() => setMostrarCompartir(true)}
@@ -322,11 +614,11 @@ function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
         </blockquote>
 
         <div className="space-y-3 pt-1 border-t" style={{ borderColor: "#E4DCC8" }}>
-          <SeccionDevocional etiqueta="Desarrollo">{devocional.desarrollo}</SeccionDevocional>
-          <SeccionDevocional etiqueta="Oración">{devocional.oracion}</SeccionDevocional>
-          <SeccionDevocional etiqueta="Aplicación" cursiva>
+          <SeccionDevocionalTexto etiqueta="Desarrollo">{devocional.desarrollo}</SeccionDevocionalTexto>
+          <SeccionDevocionalTexto etiqueta="Oración">{devocional.oracion}</SeccionDevocionalTexto>
+          <SeccionDevocionalTexto etiqueta="Aplicación" cursiva>
             {devocional.aplicacion}
-          </SeccionDevocional>
+          </SeccionDevocionalTexto>
         </div>
       </div>
 
@@ -342,25 +634,6 @@ function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
         {leido ? "Marcado como leído" : "Marcar como leído"}
       </button>
 
-      {proximaReunion && (
-        <div>
-          <Etiqueta>Próximo</Etiqueta>
-          <div className="mt-2 rounded-xl p-4 flex items-center gap-3" style={{ backgroundColor: "#1B2029" }}>
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#2A3140" }}>
-              <Calendar size={16} style={{ color: "#E8A33D" }} />
-            </div>
-            <div className="flex-1">
-              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
-                {proximaReunion.titulo}
-              </p>
-              <p className="text-[12px]" style={{ color: "#8A94A6" }}>
-                {proximaReunion.dia} · {proximaReunion.hora}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {mostrarCompartir && (
         <ModalCompartir titulo={devocional.titulo} onCerrar={() => setMostrarCompartir(false)} />
       )}
@@ -368,98 +641,7 @@ function PantallaInicio({ leido, setLeido, racha, devocional, reuniones }) {
   );
 }
 
-function PantallaReuniones({ reuniones, toggleRecordar }) {
-  return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div>
-        <Etiqueta>Agenda</Etiqueta>
-        <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-          Reuniones
-        </h1>
-      </div>
-      <div className="space-y-3">
-        {reuniones.map((r) => (
-          <div
-            key={r.id}
-            className="rounded-xl p-4 flex items-start justify-between gap-3"
-            style={{ backgroundColor: "#1B2029" }}
-          >
-            <div className="space-y-1.5">
-              <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-                {r.titulo}
-              </p>
-              <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                <Clock size={12} />
-                {r.dia} · {r.hora}
-              </div>
-              <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
-                <MapPin size={12} />
-                {r.lugar}
-              </div>
-            </div>
-            <button
-              onClick={() => toggleRecordar(r.id)}
-              className="flex flex-col items-center gap-1 pt-1"
-              aria-label="Activar recordatorio"
-            >
-              <Bell
-                size={18}
-                fill={r.recordar ? "#E8A33D" : "none"}
-                style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}
-              />
-              <span className="text-[9px]" style={{ color: r.recordar ? "#E8A33D" : "#5A6272" }}>
-                {r.recordar ? "Activo" : "Avisarme"}
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PantallaNovedades({ novedades, esAdmin, setMostrarForm }) {
-  return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <Etiqueta>Comunidad</Etiqueta>
-          <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-            Novedades
-          </h1>
-        </div>
-        {esAdmin && (
-          <button
-            onClick={() => setMostrarForm(true)}
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: "#E8A33D" }}
-          >
-            <Plus size={18} style={{ color: "#241B0E" }} />
-          </button>
-        )}
-      </div>
-      <div className="space-y-3">
-        {novedades.map((n) => (
-          <div key={n.id} className="rounded-xl p-4" style={{ backgroundColor: "#1B2029" }}>
-            <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
-              {n.titulo}
-            </p>
-            <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
-              {n.cuerpo}
-            </p>
-            <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
-              <span>{n.autor}</span>
-              <span>·</span>
-              <span>{n.hace}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PantallaHistorial({ historial }) {
+function ArchivoDevocionales({ historial }) {
   const [temaActivo, setTemaActivo] = useState("Todos");
   const [mesActivo, setMesActivo] = useState("Todos");
   const [expandidoId, setExpandidoId] = useState(null);
@@ -472,63 +654,54 @@ function PantallaHistorial({ historial }) {
   );
 
   return (
-    <div className="px-5 pt-6 pb-4 space-y-4">
-      <div>
-        <Etiqueta>Archivo</Etiqueta>
-        <h1 className="text-xl font-serif mt-1" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
-          Historial
-        </h1>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-        {temas.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTemaActivo(t)}
-            className="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium"
-            style={{
-              backgroundColor: temaActivo === t ? "#E8A33D" : "#1B2029",
-              color: temaActivo === t ? "#241B0E" : "#8A94A6",
-            }}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      <div className="relative">
-        <select
-          value={mesActivo}
-          onChange={(e) => setMesActivo(e.target.value)}
-          className="w-full appearance-none rounded-xl px-3 py-2.5 text-[13px] pr-9"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
-        >
-          {meses.map((m) => (
-            <option key={m} value={m}>
-              {m === "Todos" ? "Todos los meses" : m}
-            </option>
+    <div className="max-w-4xl mx-auto space-y-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+          {temas.map((t) => (
+            <button
+              key={t}
+              onClick={() => setTemaActivo(t)}
+              className="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium"
+              style={{
+                backgroundColor: temaActivo === t ? "#E8A33D" : "#1B2029",
+                color: temaActivo === t ? "#241B0E" : "#8A94A6",
+              }}
+            >
+              {t}
+            </button>
           ))}
-        </select>
-        <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8A94A6" }} />
+        </div>
+
+        <div className="relative sm:w-56 shrink-0">
+          <select
+            value={mesActivo}
+            onChange={(e) => setMesActivo(e.target.value)}
+            className="w-full appearance-none rounded-xl px-3 py-2.5 text-[13px] pr-9"
+            style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
+          >
+            {meses.map((m) => (
+              <option key={m} value={m}>
+                {m === "Todos" ? "Todos los meses" : m}
+              </option>
+            ))}
+          </select>
+          <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8A94A6" }} />
+        </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {filtrados.length === 0 && (
-          <p className="text-[13px] text-center py-8" style={{ color: "#5A6272" }}>
+          <p className="text-[13px] text-center py-8 sm:col-span-2" style={{ color: "#5A6272" }}>
             No hay devocionales para este filtro.
           </p>
         )}
         {filtrados.map((d) => {
           const abierto = expandidoId === d.id;
           return (
-            <div
-              key={d.id}
-              className="rounded-xl overflow-hidden"
-              style={{ backgroundColor: "#1B2029" }}
-            >
+            <div key={d.id} className="rounded-xl overflow-hidden self-start" style={{ backgroundColor: "#1B2029" }}>
               <button
                 onClick={() => setExpandidoId(abierto ? null : d.id)}
-                className="w-full flex items-center justify-between px-4 py-3 text-left"
+                className="w-full flex items-center justify-between px-4 py-3 text-left gap-2"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
@@ -545,6 +718,7 @@ function PantallaHistorial({ historial }) {
                 </div>
                 <ChevronDown
                   size={15}
+                  className="shrink-0"
                   style={{ color: "#5A6272", transform: abierto ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
                 />
               </button>
@@ -566,26 +740,54 @@ function PantallaHistorial({ historial }) {
   );
 }
 
+function SeccionDevocional({ devocional, leido, setLeido, racha, historial }) {
+  const [mostrarArchivo, setMostrarArchivo] = useState(false);
+  return (
+    <section id="devocional" className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+      <div className="space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <Etiqueta>Cada día</Etiqueta>
+          <Titulo>Devocional del día</Titulo>
+        </div>
+
+        <TarjetaDevocionalDia devocional={devocional} leido={leido} setLeido={setLeido} racha={racha} />
+
+        <div className="text-center">
+          <button
+            onClick={() => setMostrarArchivo(!mostrarArchivo)}
+            className="text-[13px] font-medium underline underline-offset-4"
+            style={{ color: "#E8A33D" }}
+          >
+            {mostrarArchivo ? "Ocultar archivo de devocionales" : "Ver archivo de devocionales anteriores"}
+          </button>
+        </div>
+
+        {mostrarArchivo && <ArchivoDevocionales historial={historial} />}
+      </div>
+    </section>
+  );
+}
+
 function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
   const [titulo, setTitulo] = useState("");
   const [cuerpo, setCuerpo] = useState("");
   return (
-    <div className="absolute inset-0 z-20 flex flex-col" style={{ backgroundColor: "#12151C" }}>
-      <div className="flex items-center gap-3 px-5 pt-6 pb-4">
-        <button onClick={onCerrar} aria-label="Cerrar">
-          <X size={20} style={{ color: "#F2ECDD" }} />
-        </button>
+    <ModalCentrado onCerrar={onCerrar}>
+      <div className="flex items-center justify-between">
         <h2 className="text-[15px] font-medium" style={{ color: "#F2ECDD" }}>
           Nueva novedad
         </h2>
+        <button onClick={onCerrar} aria-label="Cerrar">
+          <X size={20} style={{ color: "#F2ECDD" }} />
+        </button>
       </div>
-      <div className="px-5 space-y-3 flex-1">
+      <div className="space-y-3">
         <input
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
           placeholder="Título"
           className="w-full rounded-lg px-3 py-2.5 text-[14px] outline-none"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
+          style={{ backgroundColor: "#12151C", color: "#F2ECDD" }}
         />
         <textarea
           value={cuerpo}
@@ -593,26 +795,80 @@ function FormularioNuevaNovedad({ onCerrar, onPublicar }) {
           placeholder="¿Qué querés anunciar?"
           rows={5}
           className="w-full rounded-lg px-3 py-2.5 text-[14px] outline-none resize-none"
-          style={{ backgroundColor: "#1B2029", color: "#F2ECDD" }}
+          style={{ backgroundColor: "#12151C", color: "#F2ECDD" }}
         />
       </div>
-      <div className="px-5 pb-6">
-        <button
-          onClick={() => {
-            if (titulo.trim()) onPublicar(titulo, cuerpo);
-          }}
-          className="w-full rounded-xl py-3 text-[14px] font-medium"
-          style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
-        >
-          Publicar
-        </button>
+      <button
+        onClick={() => {
+          if (titulo.trim()) onPublicar(titulo, cuerpo);
+        }}
+        className="w-full rounded-xl py-3 text-[14px] font-medium"
+        style={{ backgroundColor: "#E8A33D", color: "#241B0E" }}
+      >
+        Publicar
+      </button>
+    </ModalCentrado>
+  );
+}
+
+function Footer() {
+  const redes = [
+    { url: CONTACTO_INSTAGRAM, icon: Instagram, label: "Instagram" },
+    { url: CONTACTO_FACEBOOK, icon: Facebook, label: "Facebook" },
+    { url: CONTACTO_YOUTUBE, icon: Youtube, label: "YouTube" },
+  ].filter((r) => r.url);
+
+  return (
+    <footer className="px-5 pt-12 pb-8 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+      <div className="max-w-6xl mx-auto flex flex-col items-center gap-5 text-center">
+        <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-12 w-auto object-contain" />
+
+        {CONTACTO_DIRECCION && (
+          <a
+            href={CONTACTO_MAPA_URL || undefined}
+            className="flex items-center gap-1.5 text-[13px]"
+            style={{ color: "#8A94A6" }}
+          >
+            <MapPin size={14} />
+            {CONTACTO_DIRECCION}
+          </a>
+        )}
+
+        {redes.length > 0 && (
+          <div className="flex items-center gap-4">
+            {redes.map((r) => (
+              <a key={r.label} href={r.url} aria-label={r.label} style={{ color: "#8A94A6" }}>
+                <r.icon size={20} />
+              </a>
+            ))}
+          </div>
+        )}
+
+        <p className="text-[11px]" style={{ color: "#5A6272" }}>
+          © {new Date().getFullYear()} Restauración y Avivamiento
+        </p>
       </div>
-    </div>
+    </footer>
+  );
+}
+
+function BotonWhatsApp() {
+  if (!CONTACTO_WHATSAPP) return null;
+  return (
+    <a
+      href={CONTACTO_WHATSAPP}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-5 right-5 z-30 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+      style={{ backgroundColor: "#3E5C46" }}
+      aria-label="Escribinos por WhatsApp"
+    >
+      <MessageCircle size={22} style={{ color: "#F2ECDD" }} />
+    </a>
   );
 }
 
 export default function AppRestauracion() {
-  const [tab, setTab] = useState("inicio");
   const [leido, setLeido] = useState(false);
   const [racha, setRacha] = useState(0);
   const [devocional, setDevocional] = useState(DEVOCIONAL_EJEMPLO);
@@ -686,86 +942,32 @@ export default function AppRestauracion() {
     setMostrarForm(false);
   };
 
-  const tabs = [
-    { id: "inicio", label: "Inicio", icon: Flame },
-    { id: "reuniones", label: "Reuniones", icon: Calendar },
-    { id: "novedades", label: "Novedades", icon: Newspaper },
-    { id: "historial", label: "Historial", icon: BookOpen },
-  ];
-
   return (
-    <div className="min-h-screen flex items-center justify-center py-8" style={{ backgroundColor: "#0B0D12" }}>
-      <div
-        className="relative w-[375px] h-[720px] rounded-[2.5rem] overflow-hidden border-[6px]"
-        style={{ backgroundColor: "#12151C", borderColor: "#000000" }}
-      >
-        {/* barra superior */}
-        <div className="flex items-center justify-end px-5 pt-3 pb-1">
-          <button
-            onClick={() => setEsAdmin(!esAdmin)}
-            className="flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full"
-            style={{
-              backgroundColor: esAdmin ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)",
-              color: esAdmin ? "#E8A33D" : "#8A94A6",
-            }}
-          >
-            <Settings size={11} />
-            {esAdmin ? "Modo admin" : "Modo lector"}
-          </button>
-        </div>
+    <div style={{ backgroundColor: "#12151C" }}>
+      <Encabezado esAdmin={esAdmin} setEsAdmin={setEsAdmin} />
 
-        {esAdmin && usandoEjemplo && (
-          <div className="mx-5 mb-1 px-3 py-1.5 rounded-lg text-[10px] text-center" style={{ backgroundColor: "rgba(193,80,46,0.15)", color: "#E0876A" }}>
+      {esAdmin && usandoEjemplo && (
+        <div className="px-5 pt-4">
+          <div
+            className="max-w-6xl mx-auto px-3 py-1.5 rounded-lg text-[11px] text-center"
+            style={{ backgroundColor: "rgba(193,80,46,0.15)", color: "#E0876A" }}
+          >
             Mostrando contenido de ejemplo — conectá las planillas en config.js
           </div>
-        )}
-
-        {/* encabezado con logo */}
-        <div className="flex items-center justify-center pt-2 pb-1">
-          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain" />
         </div>
+      )}
 
-        <div className="overflow-y-auto" style={{ height: "calc(100% - 196px)" }}>
-          {tab === "inicio" && (
-            <PantallaInicio
-              leido={leido}
-              setLeido={marcarLeido}
-              racha={racha}
-              devocional={devocional}
-              reuniones={reuniones}
-            />
-          )}
-          {tab === "reuniones" && <PantallaReuniones reuniones={reuniones} toggleRecordar={toggleRecordar} />}
-          {tab === "novedades" && (
-            <PantallaNovedades novedades={novedades} esAdmin={esAdmin} setMostrarForm={setMostrarForm} />
-          )}
-          {tab === "historial" && <PantallaHistorial historial={historial} />}
-        </div>
+      <main>
+        <Hero proximaReunion={reuniones[0]} />
+        <SeccionAgenda reuniones={reuniones} toggleRecordar={toggleRecordar} />
+        <SeccionNovedades novedades={novedades} esAdmin={esAdmin} setMostrarForm={setMostrarForm} />
+        <SeccionDevocional devocional={devocional} leido={leido} setLeido={marcarLeido} racha={racha} historial={historial} />
+      </main>
 
-        {mostrarForm && (
-          <FormularioNuevaNovedad onCerrar={() => setMostrarForm(false)} onPublicar={publicarNovedad} />
-        )}
+      <Footer />
+      <BotonWhatsApp />
 
-        {/* nav inferior */}
-        <div
-          className="absolute bottom-0 left-0 right-0 flex items-center justify-around pt-3 pb-6 border-t"
-          style={{ backgroundColor: "#12151C", borderColor: "rgba(255,255,255,0.06)" }}
-        >
-          {tabs.map(({ id, label, icon: Icon }) => (
-            <button key={id} onClick={() => setTab(id)} className="flex flex-col items-center gap-1">
-              <Icon
-                size={20}
-                strokeWidth={1.8}
-                style={{ color: tab === id ? "#E8A33D" : "#5A6272" }}
-                fill={tab === id && id === "inicio" ? "rgba(232,163,61,0.3)" : "none"}
-              />
-              <span className="text-[10px]" style={{ color: tab === id ? "#E8A33D" : "#5A6272" }}>
-                {label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+      {mostrarForm && <FormularioNuevaNovedad onCerrar={() => setMostrarForm(false)} onPublicar={publicarNovedad} />}
     </div>
   );
 }
