@@ -1,5 +1,5 @@
-import { query } from "../_lib/db.js";
-import { exigirSesion } from "../_lib/auth.js";
+import { query } from "../db.js";
+import { exigirSesion } from "../auth.js";
 
 export default async function handler(req, res) {
   const sesion = exigirSesion(req, res);

@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { query } from "../_lib/db.js";
-import { obtenerSesion, exigirSesion, firmarSesion, setCookieSesion } from "../_lib/auth.js";
+import { query } from "../db.js";
+import { obtenerSesion, exigirSesion, firmarSesion, setCookieSesion } from "../auth.js";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
