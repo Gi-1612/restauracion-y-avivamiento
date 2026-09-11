@@ -20,7 +20,8 @@ export default function SubidorImagen({ value, onChange, carpeta }) {
       });
       onChange(resultado.url);
     } catch (err) {
-      setError("No se pudo subir la imagen. Probá de nuevo.");
+      console.error("Error al subir imagen:", err);
+      setError(`No se pudo subir la imagen: ${err.message || "error desconocido"}`);
     } finally {
       setSubiendo(false);
       if (inputRef.current) inputRef.current.value = "";
