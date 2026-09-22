@@ -24,14 +24,14 @@ export default function AdminLogin({ onAutenticado }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5" style={{ backgroundColor: "#12151C" }}>
+    <div className="min-h-screen flex items-center justify-center px-5" style={{ backgroundColor: "#FAF5EA" }}>
       <form onSubmit={enviar} className="w-full max-w-sm space-y-5">
         <div className="flex flex-col items-center gap-2 text-center">
           <Flame size={28} style={{ color: "#E8A33D" }} />
-          <h1 className="text-xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+          <h1 className="text-xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
             Panel de administración
           </h1>
-          <p className="text-[13px]" style={{ color: "#8A94A6" }}>
+          <p className="text-[13px]" style={{ color: "#8A7F6A" }}>
             Restauración y Avivamiento
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function AdminLogin({ onAutenticado }) {
           Entrar
         </Boton>
 
-        <a href="/" className="block text-center text-[12px]" style={{ color: "#5A6272" }}>
+        <a href="/" className="block text-center text-[12px]" style={{ color: "#A89A82" }}>
           Volver al sitio
         </a>
       </form>

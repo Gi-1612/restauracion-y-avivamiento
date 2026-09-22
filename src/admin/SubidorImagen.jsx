@@ -31,7 +31,7 @@ export default function SubidorImagen({ value, onChange, carpeta }) {
   return (
     <div className="space-y-2">
       {value && (
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden" style={{ backgroundColor: "#12151C" }}>
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden" style={{ backgroundColor: "#FAF5EA" }}>
           <img src={value} alt="" className="w-full h-full object-cover" />
           <button
             type="button"
@@ -40,13 +40,13 @@ export default function SubidorImagen({ value, onChange, carpeta }) {
             style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
             aria-label="Quitar imagen"
           >
-            <X size={14} style={{ color: "#F2ECDD" }} />
+            <X size={14} style={{ color: "#2A2620" }} />
           </button>
         </div>
       )}
       <label
         className="flex items-center justify-center gap-2 rounded-lg border border-dashed py-3 text-[13px] cursor-pointer"
-        style={{ borderColor: "rgba(255,255,255,0.15)", color: "#8A94A6" }}
+        style={{ borderColor: "rgba(0,0,0,0.15)", color: "#8A7F6A" }}
       >
         {subiendo ? (
           <Loader2 size={15} className="animate-spin" />
@@ -64,7 +64,7 @@ export default function SubidorImagen({ value, onChange, carpeta }) {
         />
       </label>
       {error && (
-        <p className="text-[12px]" style={{ color: "#E0876A" }}>
+        <p className="text-[12px]" style={{ color: "#C1523A" }}>
           {error}
         </p>
       )}

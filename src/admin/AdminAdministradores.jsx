@@ -37,7 +37,7 @@ function TarjetaMiCuenta({ sesion, onActualizado }) {
 
   return (
     <Tarjeta className="space-y-3">
-      <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A94A6" }}>
+      <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A7F6A" }}>
         Mi cuenta
       </h2>
       {error && <Alerta>{error}</Alerta>}
@@ -102,10 +102,10 @@ export default function AdminAdministradores() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+        <h1 className="text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
           Administradores
         </h1>
-        <p className="text-[13px] mt-1" style={{ color: "#8A94A6" }}>
+        <p className="text-[13px] mt-1" style={{ color: "#8A7F6A" }}>
           Cada persona entra con su propio usuario y contraseña.
         </p>
       </div>
@@ -115,7 +115,7 @@ export default function AdminAdministradores() {
       {error && <Alerta>{error}</Alerta>}
 
       <Tarjeta className="space-y-3">
-        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A94A6" }}>
+        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A7F6A" }}>
           Invitar a alguien nuevo
         </h2>
         <form onSubmit={invitar} className="space-y-3">
@@ -138,16 +138,16 @@ export default function AdminAdministradores() {
         {admins?.map((a) => (
           <Tarjeta key={a.id} className="flex items-center justify-between">
             <div>
-              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
-                {a.nombre} {a.id === sesion.id && <span style={{ color: "#5A6272" }}>(vos)</span>}
+              <p className="text-[13px] font-medium" style={{ color: "#2A2620" }}>
+                {a.nombre} {a.id === sesion.id && <span style={{ color: "#A89A82" }}>(vos)</span>}
               </p>
-              <p className="text-[11px]" style={{ color: "#5A6272" }}>
+              <p className="text-[11px]" style={{ color: "#A89A82" }}>
                 {a.email}
               </p>
             </div>
             {a.id !== sesion.id && (
               <button onClick={() => eliminar(a)} aria-label="Eliminar administrador">
-                <Trash2 size={16} style={{ color: "#5A6272" }} />
+                <Trash2 size={16} style={{ color: "#A89A82" }} />
               </button>
             )}
           </Tarjeta>

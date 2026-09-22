@@ -65,10 +65,10 @@ export default function AdminCategorias() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+          <h1 className="text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
             Categorías
           </h1>
-          <p className="text-[13px] mt-1" style={{ color: "#8A94A6" }}>
+          <p className="text-[13px] mt-1" style={{ color: "#8A7F6A" }}>
             Activá o desactivá secciones del sitio, o creá una nueva (por ejemplo "Misiones").
           </p>
         </div>
@@ -107,19 +107,19 @@ export default function AdminCategorias() {
           <Tarjeta key={c.id} className="flex items-center gap-4">
             <Interruptor activo={c.activa} onChange={() => alternarActiva(c)} />
             <Link to={`/admin/categorias/${c.slug}`} className="flex-1 min-w-0">
-              <p className="text-[14px] font-medium truncate" style={{ color: "#F2ECDD" }}>
+              <p className="text-[14px] font-medium truncate" style={{ color: "#2A2620" }}>
                 {c.nombre}
               </p>
-              <p className="text-[11px]" style={{ color: "#5A6272" }}>
+              <p className="text-[11px]" style={{ color: "#A89A82" }}>
                 {TIPOS.find((t) => t.valor === c.tipo)?.label.split(" (")[0]} · {c.publicados}/{c.total_items} publicado
                 {c.publicados === 1 ? "" : "s"}
               </p>
             </Link>
             <button onClick={() => eliminar(c)} aria-label="Eliminar categoría">
-              <Trash2 size={16} style={{ color: "#5A6272" }} />
+              <Trash2 size={16} style={{ color: "#A89A82" }} />
             </button>
             <Link to={`/admin/categorias/${c.slug}`} aria-label="Administrar publicaciones">
-              <ChevronRight size={18} style={{ color: "#5A6272" }} />
+              <ChevronRight size={18} style={{ color: "#A89A82" }} />
             </Link>
           </Tarjeta>
         ))}

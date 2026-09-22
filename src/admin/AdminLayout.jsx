@@ -45,7 +45,7 @@ export default function AdminLayout({ sesion, setSesion, onSalir }) {
           }
           style={({ isActive }) => ({
             backgroundColor: isActive ? "rgba(232,163,61,0.12)" : "transparent",
-            color: isActive ? "#E8A33D" : "#B7BFCC",
+            color: isActive ? "#E8A33D" : "#5C5240",
           })}
         >
           <Icon size={17} />
@@ -56,17 +56,17 @@ export default function AdminLayout({ sesion, setSesion, onSalir }) {
   );
 
   return (
-    <div className="min-h-screen md:flex" style={{ backgroundColor: "#0E1119" }}>
+    <div className="min-h-screen md:flex" style={{ backgroundColor: "#F2E9D6" }}>
       {/* Sidebar desktop */}
       <aside
         className="hidden md:flex md:flex-col md:w-64 shrink-0 border-r px-4 py-6"
-        style={{ borderColor: "rgba(255,255,255,0.06)", backgroundColor: "#12151C" }}
+        style={{ borderColor: "rgba(0,0,0,0.06)", backgroundColor: "#FAF5EA" }}
       >
         <div className="px-2 pb-6">
-          <p className="text-[15px]" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+          <p className="text-[15px]" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
             Panel
           </p>
-          <p className="text-[11px]" style={{ color: "#5A6272" }}>
+          <p className="text-[11px]" style={{ color: "#A89A82" }}>
             Restauración y Avivamiento
           </p>
         </div>
@@ -77,19 +77,19 @@ export default function AdminLayout({ sesion, setSesion, onSalir }) {
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 px-3 text-[12px]"
-            style={{ color: "#5A6272" }}
+            style={{ color: "#A89A82" }}
           >
             <ExternalLink size={13} />
             Ver el sitio
           </a>
-          <div className="border-t pt-3 px-2" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-            <p className="text-[12px] font-medium" style={{ color: "#F2ECDD" }}>
+          <div className="border-t pt-3 px-2" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+            <p className="text-[12px] font-medium" style={{ color: "#2A2620" }}>
               {nombre}
             </p>
             <button
               onClick={cerrarSesion}
               className="flex items-center gap-1.5 mt-1.5 text-[12px]"
-              style={{ color: "#8A94A6" }}
+              style={{ color: "#8A7F6A" }}
             >
               <LogOut size={13} />
               Cerrar sesión
@@ -101,21 +101,21 @@ export default function AdminLayout({ sesion, setSesion, onSalir }) {
       {/* Topbar mobile */}
       <div
         className="md:hidden flex items-center justify-between px-5 h-14 border-b sticky top-0 z-30"
-        style={{ backgroundColor: "#12151C", borderColor: "rgba(255,255,255,0.06)" }}
+        style={{ backgroundColor: "#FAF5EA", borderColor: "rgba(0,0,0,0.06)" }}
       >
-        <p style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>Panel</p>
+        <p style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>Panel</p>
         <button onClick={() => setMenuAbierto(!menuAbierto)} aria-label="Abrir menú">
-          {menuAbierto ? <X size={20} style={{ color: "#F2ECDD" }} /> : <Menu size={20} style={{ color: "#F2ECDD" }} />}
+          {menuAbierto ? <X size={20} style={{ color: "#2A2620" }} /> : <Menu size={20} style={{ color: "#2A2620" }} />}
         </button>
       </div>
       {menuAbierto && (
-        <div className="md:hidden px-4 py-4 space-y-4 border-b" style={{ backgroundColor: "#12151C", borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="md:hidden px-4 py-4 space-y-4 border-b" style={{ backgroundColor: "#FAF5EA", borderColor: "rgba(0,0,0,0.06)" }}>
           <Nav enMobile />
-          <div className="border-t pt-3 flex items-center justify-between" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-            <span className="text-[12px]" style={{ color: "#8A94A6" }}>
+          <div className="border-t pt-3 flex items-center justify-between" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+            <span className="text-[12px]" style={{ color: "#8A7F6A" }}>
               {nombre}
             </span>
-            <button onClick={cerrarSesion} className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+            <button onClick={cerrarSesion} className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A7F6A" }}>
               <LogOut size={13} />
               Salir
             </button>

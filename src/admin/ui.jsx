@@ -10,15 +10,15 @@ export function Modal({ titulo, onCerrar, children }) {
     >
       <div
         className="w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto"
-        style={{ backgroundColor: "#1B2029" }}
+        style={{ backgroundColor: "#FFFFFF" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-[15px] font-medium" style={{ color: "#F2ECDD" }}>
+          <h2 className="text-[15px] font-medium" style={{ color: "#2A2620" }}>
             {titulo}
           </h2>
           <button onClick={onCerrar} aria-label="Cerrar">
-            <X size={20} style={{ color: "#F2ECDD" }} />
+            <X size={20} style={{ color: "#2A2620" }} />
           </button>
         </div>
         {children}
@@ -30,7 +30,7 @@ export function Modal({ titulo, onCerrar, children }) {
 export function Campo({ etiqueta, children }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-[12px] font-medium" style={{ color: "#B7BFCC" }}>
+      <span className="text-[12px] font-medium" style={{ color: "#5C5240" }}>
         {etiqueta}
       </span>
       {children}
@@ -39,10 +39,10 @@ export function Campo({ etiqueta, children }) {
 }
 
 const claseInput =
-  "w-full rounded-lg px-3 py-2.5 text-[14px] outline-none border border-transparent focus:border-[#E8A33D]";
+  "w-full rounded-lg px-3 py-2.5 text-[14px] outline-none border border-black/10 focus:border-[#E8A33D]";
 
 export function Input(props) {
-  return <input {...props} className={`${claseInput} ${props.className || ""}`} style={{ backgroundColor: "#12151C", color: "#F2ECDD", ...props.style }} />;
+  return <input {...props} className={`${claseInput} ${props.className || ""}`} style={{ backgroundColor: "#FAF5EA", color: "#2A2620", ...props.style }} />;
 }
 
 export function TextArea(props) {
@@ -50,14 +50,14 @@ export function TextArea(props) {
     <textarea
       {...props}
       className={`${claseInput} resize-none ${props.className || ""}`}
-      style={{ backgroundColor: "#12151C", color: "#F2ECDD", ...props.style }}
+      style={{ backgroundColor: "#FAF5EA", color: "#2A2620", ...props.style }}
     />
   );
 }
 
 export function Select({ children, ...props }) {
   return (
-    <select {...props} className={`${claseInput} ${props.className || ""}`} style={{ backgroundColor: "#12151C", color: "#F2ECDD" }}>
+    <select {...props} className={`${claseInput} ${props.className || ""}`} style={{ backgroundColor: "#FAF5EA", color: "#2A2620" }}>
       {children}
     </select>
   );
@@ -66,8 +66,8 @@ export function Select({ children, ...props }) {
 export function Boton({ variante = "primario", cargando, children, className, ...props }) {
   const estilos = {
     primario: { backgroundColor: "#E8A33D", color: "#241B0E" },
-    secundario: { backgroundColor: "rgba(255,255,255,0.06)", color: "#F2ECDD" },
-    peligro: { backgroundColor: "rgba(224,135,106,0.15)", color: "#E0876A" },
+    secundario: { backgroundColor: "rgba(0,0,0,0.06)", color: "#2A2620" },
+    peligro: { backgroundColor: "rgba(224,135,106,0.15)", color: "#C1523A" },
   };
   return (
     <button
@@ -90,11 +90,11 @@ export function Interruptor({ activo, onChange, disabled }) {
       disabled={disabled}
       aria-pressed={activo}
       className="w-10 h-6 rounded-full relative shrink-0 transition-colors disabled:opacity-50"
-      style={{ backgroundColor: activo ? "#E8A33D" : "rgba(255,255,255,0.15)" }}
+      style={{ backgroundColor: activo ? "#E8A33D" : "rgba(0,0,0,0.15)" }}
     >
       <span
         className="absolute top-0.5 w-5 h-5 rounded-full transition-all"
-        style={{ backgroundColor: "#12151C", left: activo ? "18px" : "2px" }}
+        style={{ backgroundColor: "#FAF5EA", left: activo ? "18px" : "2px" }}
       />
     </button>
   );
@@ -102,7 +102,7 @@ export function Interruptor({ activo, onChange, disabled }) {
 
 export function Tarjeta({ children, className }) {
   return (
-    <div className={`rounded-xl p-5 ${className || ""}`} style={{ backgroundColor: "#1B2029" }}>
+    <div className={`rounded-xl p-5 ${className || ""}`} style={{ backgroundColor: "#FFFFFF" }}>
       {children}
     </div>
   );
@@ -110,8 +110,8 @@ export function Tarjeta({ children, className }) {
 
 export function Alerta({ tipo = "error", children }) {
   const colores = {
-    error: { backgroundColor: "rgba(224,135,106,0.12)", color: "#E0876A" },
-    ok: { backgroundColor: "rgba(62,92,70,0.2)", color: "#8FCB9C" },
+    error: { backgroundColor: "rgba(224,135,106,0.12)", color: "#C1523A" },
+    ok: { backgroundColor: "rgba(62,92,70,0.2)", color: "#2F5A3E" },
   };
   return (
     <div className="rounded-lg px-3 py-2.5 text-[13px]" style={colores[tipo]}>
