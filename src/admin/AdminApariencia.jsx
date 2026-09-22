@@ -39,15 +39,15 @@ export default function AdminApariencia() {
     }
   };
 
-  if (!config) return <p style={{ color: "#8A94A6" }}>Cargando...</p>;
+  if (!config) return <p style={{ color: "#8A7F6A" }}>Cargando...</p>;
 
   return (
     <form onSubmit={guardar} className="space-y-6">
       <div>
-        <h1 className="text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+        <h1 className="text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
           Apariencia
         </h1>
-        <p className="text-[13px] mt-1" style={{ color: "#8A94A6" }}>
+        <p className="text-[13px] mt-1" style={{ color: "#8A7F6A" }}>
           La foto de portada y los datos de contacto que se muestran en el sitio.
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function AdminApariencia() {
       {mensaje && <Alerta tipo="ok">{mensaje}</Alerta>}
 
       <Tarjeta className="space-y-3">
-        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A94A6" }}>
+        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A7F6A" }}>
           Portada
         </h2>
         <Campo etiqueta="Foto de fondo (opcional)">
@@ -65,7 +65,7 @@ export default function AdminApariencia() {
       </Tarjeta>
 
       <Tarjeta className="space-y-3">
-        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A94A6" }}>
+        <h2 className="text-[13px] font-medium uppercase tracking-wide" style={{ color: "#8A7F6A" }}>
           Contacto y redes sociales
         </h2>
         {CAMPOS_CONTACTO.map((c) => (

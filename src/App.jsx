@@ -50,7 +50,7 @@ function Flama({ racha }) {
 
 function Etiqueta({ children }) {
   return (
-    <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: "#8A94A6" }}>
+    <span className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: "#8A7F6A" }}>
       {children}
     </span>
   );
@@ -58,7 +58,7 @@ function Etiqueta({ children }) {
 
 function Titulo({ children }) {
   return (
-    <h2 className="text-2xl sm:text-3xl mt-1.5" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+    <h2 className="text-2xl sm:text-3xl mt-1.5" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
       {children}
     </h2>
   );
@@ -70,7 +70,7 @@ function ImagenConReserva({ src, alt, className, iconSize = 26 }) {
     return (
       <div
         className={`flex items-center justify-center ${className || ""}`}
-        style={{ background: "linear-gradient(135deg, #2A3140 0%, #1B2029 100%)" }}
+        style={{ background: "linear-gradient(135deg, #F2E9D6 0%, #FFFFFF 100%)" }}
       >
         <ImageIcon size={iconSize} style={{ color: "#3E4658" }} strokeWidth={1.4} />
       </div>
@@ -130,7 +130,7 @@ function ReproductorAudio({ src }) {
   };
 
   return (
-    <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#241B0E" }}>
+    <div className="rounded-xl p-3 flex items-center gap-3" style={{ backgroundColor: "#F1E4C9" }}>
       <audio ref={audioRef} src={src} preload="auto" />
       {error ? (
         <a href={src} className="flex-1 text-[11px] underline text-center py-2" style={{ color: "#E8A33D" }}>
@@ -151,10 +151,10 @@ function ReproductorAudio({ src }) {
               <div className="h-full rounded-full transition-all" style={{ width: `${progreso}%`, backgroundColor: "#E8A33D" }} />
             </div>
             <div className="flex justify-between mt-1">
-              <span className="text-[10px]" style={{ color: "#C9B892" }}>
+              <span className="text-[10px]" style={{ color: "#6B5F47" }}>
                 Audio del devocional
               </span>
-              <span className="text-[10px]" style={{ color: "#C9B892" }}>
+              <span className="text-[10px]" style={{ color: "#6B5F47" }}>
                 {formatoTiempo(duracion)}
               </span>
             </div>
@@ -186,7 +186,7 @@ function ModalCentrado({ onCerrar, children }) {
     >
       <div
         className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto"
-        style={{ backgroundColor: "#1B2029" }}
+        style={{ backgroundColor: "#FFFFFF" }}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
@@ -199,19 +199,19 @@ function ModalCompartir({ titulo, onCerrar }) {
   const [copiado, setCopiado] = useState(false);
   const opciones = [
     { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, color: "#3E5C46" },
-    { id: "enlace", label: copiado ? "¡Enlace copiado!" : "Copiar enlace", icon: LinkIcon, color: "#3A4150" },
+    { id: "enlace", label: copiado ? "¡Enlace copiado!" : "Copiar enlace", icon: LinkIcon, color: "#EFE7D3" },
   ];
   return (
     <ModalCentrado onCerrar={onCerrar}>
       <div className="flex items-center justify-between">
         <div>
           <Etiqueta>Compartir</Etiqueta>
-          <p className="text-[13px] mt-0.5" style={{ color: "#F2ECDD" }}>
+          <p className="text-[13px] mt-0.5" style={{ color: "#2A2620" }}>
             {titulo}
           </p>
         </div>
         <button onClick={onCerrar} aria-label="Cerrar">
-          <X size={18} style={{ color: "#8A94A6" }} />
+          <X size={18} style={{ color: "#8A7F6A" }} />
         </button>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -222,8 +222,8 @@ function ModalCompartir({ titulo, onCerrar }) {
             className="flex flex-col items-center gap-2 rounded-xl py-4"
             style={{ backgroundColor: op.color }}
           >
-            <op.icon size={20} style={{ color: "#F2ECDD" }} />
-            <span className="text-[11px]" style={{ color: "#F2ECDD" }}>
+            <op.icon size={20} style={{ color: "#2A2620" }} />
+            <span className="text-[11px]" style={{ color: "#2A2620" }}>
               {op.label}
             </span>
           </button>
@@ -236,34 +236,34 @@ function ModalCompartir({ titulo, onCerrar }) {
 function Encabezado({ categorias }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   return (
-    <header className="sticky top-0 z-40 backdrop-blur border-b" style={{ backgroundColor: "rgba(18,21,28,0.9)", borderColor: "rgba(255,255,255,0.06)" }}>
+    <header className="sticky top-0 z-40 backdrop-blur border-b" style={{ backgroundColor: "rgba(250,245,234,0.9)", borderColor: "rgba(0,0,0,0.06)" }}>
       <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2">
-          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-9 w-auto object-contain" />
+          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-9 w-auto object-contain" style={{ filter: "invert(1)" }} />
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
           {categorias.map((c) => (
-            <a key={c.slug} href={`#cat-${c.slug}`} className="text-[13px] font-medium tracking-wide" style={{ color: "#B7BFCC" }}>
+            <a key={c.slug} href={`#cat-${c.slug}`} className="text-[13px] font-medium tracking-wide" style={{ color: "#5C5240" }}>
               {c.nombre}
             </a>
           ))}
         </nav>
 
         <button className="md:hidden" onClick={() => setMenuAbierto(!menuAbierto)} aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}>
-          {menuAbierto ? <X size={22} style={{ color: "#F2ECDD" }} /> : <Menu size={22} style={{ color: "#F2ECDD" }} />}
+          {menuAbierto ? <X size={22} style={{ color: "#2A2620" }} /> : <Menu size={22} style={{ color: "#2A2620" }} />}
         </button>
       </div>
 
       {menuAbierto && (
-        <div className="md:hidden px-5 pb-5 space-y-3 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="md:hidden px-5 pb-5 space-y-3 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
           {categorias.map((c) => (
             <a
               key={c.slug}
               href={`#cat-${c.slug}`}
               onClick={() => setMenuAbierto(false)}
               className="block pt-3 text-[14px] font-medium"
-              style={{ color: "#F2ECDD" }}
+              style={{ color: "#2A2620" }}
             >
               {c.nombre}
             </a>
@@ -280,6 +280,13 @@ function Hero({ configuracion, categorias }) {
   const categoriaEventos = categorias.find((c) => c.tipo === "evento" && c.items.length > 0);
   const proximaActividad = categoriaEventos?.items[0];
 
+  // Con foto de fondo el texto va claro sobre un velo oscuro (legible sobre cualquier
+  // foto); sin foto, el fondo es claro y el texto va oscuro.
+  const colorTitulo = tieneFoto ? "#FAF5EA" : "#2A2620";
+  const colorTexto = tieneFoto ? "#E4DCC8" : "#5C5240";
+  const outlineBorde = tieneFoto ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.15)";
+  const outlineFondo = tieneFoto ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.02)";
+
   return (
     <section
       id="top"
@@ -287,22 +294,22 @@ function Hero({ configuracion, categorias }) {
       style={
         tieneFoto
           ? {
-              backgroundImage: `linear-gradient(180deg, rgba(11,13,18,0.55) 0%, rgba(11,13,18,0.75) 55%, #12151C 100%), url(${configuracion.hero_imagen_url})`,
+              backgroundImage: `linear-gradient(180deg, rgba(11,13,18,0.55) 0%, rgba(11,13,18,0.75) 55%, #FAF5EA 100%), url(${configuracion.hero_imagen_url})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }
-          : { backgroundColor: "#12151C" }
+          : { backgroundColor: "#FAF5EA" }
       }
     >
       {!tieneFoto && (
         <>
           <div
             className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(232,163,61,0.16) 0%, rgba(232,163,61,0) 70%)" }}
+            style={{ background: "radial-gradient(circle, rgba(232,163,61,0.22) 0%, rgba(232,163,61,0) 70%)" }}
           />
           <div
             className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full blur-3xl pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(62,92,70,0.25) 0%, rgba(62,92,70,0) 70%)" }}
+            style={{ background: "radial-gradient(circle, rgba(62,92,70,0.16) 0%, rgba(62,92,70,0) 70%)" }}
           />
         </>
       )}
@@ -312,10 +319,10 @@ function Hero({ configuracion, categorias }) {
           <Sparkles size={14} style={{ color: "#E8A33D" }} />
           <Etiqueta>Bienvenido a nuestra comunidad</Etiqueta>
         </div>
-        <h1 className="text-4xl sm:text-6xl leading-tight" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+        <h1 className="text-4xl sm:text-6xl leading-tight" style={{ color: colorTitulo, fontFamily: "'Lora', serif" }}>
           Restauración y Avivamiento
         </h1>
-        <p className="text-[15px] sm:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: "#C7CEDA" }}>
+        <p className="text-[15px] sm:text-lg leading-relaxed max-w-xl mx-auto" style={{ color: colorTexto }}>
           Un lugar para encontrarte con Dios, crecer en comunidad y enterarte de todo lo que pasa en la iglesia, en un
           solo lugar.
         </p>
@@ -328,7 +335,7 @@ function Hero({ configuracion, categorias }) {
               style={
                 i === 0
                   ? { backgroundColor: "#E8A33D", color: "#241B0E" }
-                  : { borderColor: "rgba(255,255,255,0.25)", color: "#F2ECDD", backgroundColor: "rgba(255,255,255,0.04)" }
+                  : { borderColor: outlineBorde, color: colorTitulo, backgroundColor: outlineFondo }
               }
             >
               Ver {c.nombre.toLowerCase()}
@@ -349,13 +356,13 @@ function Hero({ configuracion, categorias }) {
         </div>
 
         {proximaActividad && (
-          <div className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto backdrop-blur" style={{ backgroundColor: "rgba(27,32,41,0.85)", border: "1px solid rgba(255,255,255,0.08)" }}>
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
+          <div className="mt-8 inline-flex items-center gap-3 rounded-xl px-4 py-3 mx-auto backdrop-blur shadow-sm" style={{ backgroundColor: "rgba(255,255,255,0.9)", border: "1px solid rgba(0,0,0,0.06)" }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#F2E9D6" }}>
               <Calendar size={16} style={{ color: "#E8A33D" }} />
             </div>
             <div className="text-left">
               <Etiqueta>Próxima actividad</Etiqueta>
-              <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
+              <p className="text-[13px] font-medium" style={{ color: "#2A2620" }}>
                 {proximaActividad.titulo}
                 {proximaActividad.fecha && ` · ${fechaConDia(aFecha(proximaActividad.fecha))}`}
                 {proximaActividad.hora && ` · ${proximaActividad.hora}`}
@@ -373,7 +380,7 @@ function BotonRecordar({ activo, onClick }) {
     <button
       onClick={onClick}
       className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium shrink-0"
-      style={{ backgroundColor: activo ? "rgba(232,163,61,0.15)" : "rgba(255,255,255,0.06)", color: activo ? "#E8A33D" : "#8A94A6" }}
+      style={{ backgroundColor: activo ? "rgba(232,163,61,0.15)" : "rgba(0,0,0,0.06)", color: activo ? "#E8A33D" : "#8A7F6A" }}
     >
       <Bell size={13} fill={activo ? "#E8A33D" : "none"} />
       {activo ? "Recordatorio activo" : "Avisarme"}
@@ -383,14 +390,14 @@ function BotonRecordar({ activo, onClick }) {
 
 function TarjetaEvento({ item, recordado, onRecordar }) {
   return (
-    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#FFFFFF" }}>
       <ImagenConReserva src={item.imagen_url} alt={item.titulo} className="w-full aspect-[16/10]" />
       <div className="p-4 space-y-2 flex-1 flex flex-col">
-        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+        <p className="text-[14px] font-medium" style={{ color: "#2A2620" }}>
           {item.titulo}
         </p>
         {(item.fecha || item.hora) && (
-          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A7F6A" }}>
             <Clock size={12} />
             {item.fecha && fechaConDia(aFecha(item.fecha))}
             {item.fecha && item.hora && " · "}
@@ -398,7 +405,7 @@ function TarjetaEvento({ item, recordado, onRecordar }) {
           </div>
         )}
         {item.lugar && (
-          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A94A6" }}>
+          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: "#8A7F6A" }}>
             <MapPin size={12} />
             {item.lugar}
           </div>
@@ -419,7 +426,7 @@ function TarjetaEvento({ item, recordado, onRecordar }) {
 function SeccionEventos({ categoria, recordatorios, toggleRecordar }) {
   const [destacado, ...resto] = categoria.items;
   return (
-    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#F2E9D6" }}>
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center max-w-xl mx-auto">
           <Etiqueta>{categoria.nombre}</Etiqueta>
@@ -427,20 +434,20 @@ function SeccionEventos({ categoria, recordatorios, toggleRecordar }) {
         </div>
 
         {categoria.items.length === 0 ? (
-          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+          <p className="text-center text-[13px] py-8" style={{ color: "#A89A82" }}>
             Todavía no hay actividades cargadas.
           </p>
         ) : (
           <>
-            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
+            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#FFFFFF", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
               <ImagenConReserva src={destacado.imagen_url} alt={destacado.titulo} className="w-full aspect-[16/10] sm:aspect-auto sm:h-full" iconSize={40} />
               <div className="p-6 sm:p-8 flex flex-col justify-center gap-3">
                 <Etiqueta>Próxima actividad</Etiqueta>
-                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
                   {destacado.titulo}
                 </h3>
                 {(destacado.fecha || destacado.hora) && (
-                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#5C5240" }}>
                     <Clock size={14} />
                     {destacado.fecha && fechaConDia(aFecha(destacado.fecha))}
                     {destacado.fecha && destacado.hora && " · "}
@@ -448,7 +455,7 @@ function SeccionEventos({ categoria, recordatorios, toggleRecordar }) {
                   </div>
                 )}
                 {destacado.lugar && (
-                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#B7BFCC" }}>
+                  <div className="flex items-center gap-1.5 text-[13px]" style={{ color: "#5C5240" }}>
                     <MapPin size={14} />
                     {destacado.lugar}
                   </div>
@@ -480,13 +487,13 @@ function SeccionEventos({ categoria, recordatorios, toggleRecordar }) {
 
 function TarjetaArticulo({ item }) {
   return (
-    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#1B2029" }}>
+    <div className="rounded-xl overflow-hidden flex flex-col" style={{ backgroundColor: "#FFFFFF" }}>
       <ImagenConReserva src={item.imagen_url} alt={item.titulo} className="w-full aspect-[16/10]" />
       <div className="p-4 flex-1 flex flex-col">
-        <p className="text-[14px] font-medium" style={{ color: "#F2ECDD" }}>
+        <p className="text-[14px] font-medium" style={{ color: "#2A2620" }}>
           {item.titulo}
         </p>
-        <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#B7BFCC" }}>
+        <p className="text-[13px] mt-1 leading-relaxed" style={{ color: "#5C5240" }}>
           {item.cuerpo}
         </p>
         {item.enlace && (
@@ -494,7 +501,7 @@ function TarjetaArticulo({ item }) {
             Ver más <ArrowUpRight size={12} />
           </a>
         )}
-        <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#5A6272" }}>
+        <div className="flex items-center gap-2 mt-3 text-[11px]" style={{ color: "#A89A82" }}>
           {item.autor && <span>{item.autor}</span>}
           {item.autor && <span>·</span>}
           <span>{tiempoRelativo(aFecha(item.creado_en))}</span>
@@ -515,19 +522,19 @@ function SeccionArticulos({ categoria }) {
         </div>
 
         {categoria.items.length === 0 ? (
-          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+          <p className="text-center text-[13px] py-8" style={{ color: "#A89A82" }}>
             Todavía no hay publicaciones en esta categoría.
           </p>
         ) : (
           <>
-            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#1B2029", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
+            <div className="rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2" style={{ backgroundColor: "#FFFFFF", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" }}>
               <ImagenConReserva src={destacado.imagen_url} alt={destacado.titulo} className="w-full aspect-[16/10] sm:aspect-auto sm:h-full" iconSize={40} />
               <div className="p-6 sm:p-8 flex flex-col justify-center gap-2">
                 <Etiqueta>Lo más reciente</Etiqueta>
-                <h3 className="text-xl sm:text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+                <h3 className="text-xl sm:text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
                   {destacado.titulo}
                 </h3>
-                <p className="text-[14px] leading-relaxed" style={{ color: "#B7BFCC" }}>
+                <p className="text-[14px] leading-relaxed" style={{ color: "#5C5240" }}>
                   {destacado.cuerpo}
                 </p>
                 {destacado.enlace && (
@@ -535,7 +542,7 @@ function SeccionArticulos({ categoria }) {
                     Ver más <ArrowUpRight size={13} />
                   </a>
                 )}
-                <div className="flex items-center gap-2 text-[12px] pt-1" style={{ color: "#5A6272" }}>
+                <div className="flex items-center gap-2 text-[12px] pt-1" style={{ color: "#A89A82" }}>
                   {destacado.autor && <span>{destacado.autor}</span>}
                   {destacado.autor && <span>·</span>}
                   <span>{tiempoRelativo(aFecha(destacado.creado_en))}</span>
@@ -573,7 +580,10 @@ function TarjetaDevocionalDia({ item, leido, setLeido, racha }) {
         )}
       </div>
 
-      <div className="rounded-2xl p-5 sm:p-7 space-y-4" style={{ backgroundColor: "#F7F3EA", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}>
+      <div
+        className="rounded-2xl p-5 sm:p-7 space-y-4"
+        style={{ backgroundColor: "#FFFDF6", boxShadow: "0 8px 24px rgba(42,38,32,0.08)", border: "1px solid rgba(0,0,0,0.06)" }}
+      >
         <div className="flex items-start justify-between">
           <div>
             <Etiqueta>{item.referencia}</Etiqueta>
@@ -631,31 +641,31 @@ function ArchivoDevocionales({ items }) {
         {items.map((d) => {
           const abierto = expandidoId === d.id;
           return (
-            <div key={d.id} className="rounded-xl overflow-hidden self-start" style={{ backgroundColor: "#1B2029" }}>
+            <div key={d.id} className="rounded-xl overflow-hidden self-start" style={{ backgroundColor: "#FFFFFF" }}>
               <button onClick={() => setExpandidoId(abierto ? null : d.id)} className="w-full flex items-center justify-between px-4 py-3 text-left gap-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#2A3140" }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#F2E9D6" }}>
                     <BookOpen size={15} style={{ color: "#E8A33D" }} />
                   </div>
                   <div>
-                    <p className="text-[13px] font-medium" style={{ color: "#F2ECDD" }}>
+                    <p className="text-[13px] font-medium" style={{ color: "#2A2620" }}>
                       {d.titulo}
                     </p>
-                    <p className="text-[11px]" style={{ color: "#8A94A6" }}>
+                    <p className="text-[11px]" style={{ color: "#8A7F6A" }}>
                       {d.fecha ? fechaConDia(aFecha(d.fecha)) : ""} {d.referencia && `· ${d.referencia}`}
                     </p>
                   </div>
                 </div>
-                <ChevronDown size={15} className="shrink-0" style={{ color: "#5A6272", transform: abierto ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                <ChevronDown size={15} className="shrink-0" style={{ color: "#A89A82", transform: abierto ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
               </button>
               {abierto && (
                 <div className="px-4 pb-4 space-y-2">
                   {d.versiculo && (
-                    <blockquote className="text-[13px] italic pl-3 border-l-2" style={{ color: "#C9B892", borderColor: "#E8A33D" }}>
+                    <blockquote className="text-[13px] italic pl-3 border-l-2" style={{ color: "#6B5F47", borderColor: "#E8A33D" }}>
                       {d.versiculo}
                     </blockquote>
                   )}
-                  <p className="text-[12px] leading-relaxed" style={{ color: "#B7BFCC" }}>
+                  <p className="text-[12px] leading-relaxed" style={{ color: "#5C5240" }}>
                     {d.cuerpo}
                   </p>
                 </div>
@@ -682,7 +692,7 @@ function SeccionDevocional({ categoria, leido, setLeido, racha }) {
   const archivo = categoria.items.filter((i) => i.id !== hoy?.id);
 
   return (
-    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#0E1119" }}>
+    <section id={`cat-${categoria.slug}`} className="px-5 py-14 sm:py-20 scroll-mt-16" style={{ backgroundColor: "#F2E9D6" }}>
       <div className="space-y-8">
         <div className="text-center max-w-xl mx-auto">
           <Etiqueta>Cada día</Etiqueta>
@@ -690,7 +700,7 @@ function SeccionDevocional({ categoria, leido, setLeido, racha }) {
         </div>
 
         {!hoy ? (
-          <p className="text-center text-[13px] py-8" style={{ color: "#5A6272" }}>
+          <p className="text-center text-[13px] py-8" style={{ color: "#A89A82" }}>
             Todavía no hay devocionales cargados.
           </p>
         ) : (
@@ -723,12 +733,12 @@ function Footer({ configuracion }) {
   ].filter((r) => r.url);
 
   return (
-    <footer className="px-5 pt-12 pb-8 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+    <footer className="px-5 pt-12 pb-8 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
       <div className="max-w-6xl mx-auto flex flex-col items-center gap-5 text-center">
-        <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-12 w-auto object-contain" />
+        <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-12 w-auto object-contain" style={{ filter: "invert(1)" }} />
 
         {configuracion.contacto_direccion && (
-          <a href={configuracion.contacto_mapa_url || undefined} className="flex items-center gap-1.5 text-[13px]" style={{ color: "#8A94A6" }}>
+          <a href={configuracion.contacto_mapa_url || undefined} className="flex items-center gap-1.5 text-[13px]" style={{ color: "#8A7F6A" }}>
             <MapPin size={14} />
             {configuracion.contacto_direccion}
           </a>
@@ -737,18 +747,18 @@ function Footer({ configuracion }) {
         {redes.length > 0 && (
           <div className="flex items-center gap-4">
             {redes.map((r) => (
-              <a key={r.label} href={r.url} aria-label={r.label} style={{ color: "#8A94A6" }}>
+              <a key={r.label} href={r.url} aria-label={r.label} style={{ color: "#8A7F6A" }}>
                 <r.icon size={20} />
               </a>
             ))}
           </div>
         )}
 
-        <p className="text-[11px]" style={{ color: "#5A6272" }}>
+        <p className="text-[11px]" style={{ color: "#A89A82" }}>
           © {new Date().getFullYear()} Restauración y Avivamiento
         </p>
 
-        <a href="/admin" className="flex items-center gap-1 text-[10px]" style={{ color: "#3A4150" }}>
+        <a href="/admin" className="flex items-center gap-1 text-[10px]" style={{ color: "#EFE7D3" }}>
           <Settings size={10} />
           Acceso administrador
         </a>
@@ -768,7 +778,7 @@ function BotonWhatsApp({ configuracion }) {
       style={{ backgroundColor: "#3E5C46" }}
       aria-label="Escribinos por WhatsApp"
     >
-      <MessageCircle size={22} style={{ color: "#F2ECDD" }} />
+      <MessageCircle size={22} style={{ color: "#2A2620" }} />
     </a>
   );
 }
@@ -812,10 +822,10 @@ export default function AppRestauracion() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-5 text-center" style={{ backgroundColor: "#12151C" }}>
+      <div className="min-h-screen flex items-center justify-center px-5 text-center" style={{ backgroundColor: "#FAF5EA" }}>
         <div>
-          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain mx-auto mb-4" />
-          <p style={{ color: "#8A94A6" }}>El sitio se está configurando. Volvé a intentar en un rato.</p>
+          <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-16 w-auto object-contain mx-auto mb-4" style={{ filter: "invert(1)" }} />
+          <p style={{ color: "#8A7F6A" }}>El sitio se está configurando. Volvé a intentar en un rato.</p>
         </div>
       </div>
     );
@@ -823,8 +833,8 @@ export default function AppRestauracion() {
 
   if (!datos) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#12151C" }}>
-        <p style={{ color: "#8A94A6" }}>Cargando...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#FAF5EA" }}>
+        <p style={{ color: "#8A7F6A" }}>Cargando...</p>
       </div>
     );
   }
@@ -832,7 +842,7 @@ export default function AppRestauracion() {
   const { categorias, configuracion } = datos;
 
   return (
-    <div style={{ backgroundColor: "#12151C" }}>
+    <div style={{ backgroundColor: "#FAF5EA" }}>
       <Encabezado categorias={categorias} />
 
       <main>

@@ -29,8 +29,8 @@ export default function AdminApp() {
 
   if (estado.cargando) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#12151C" }}>
-        <p style={{ color: "#8A94A6" }}>Cargando...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#FAF5EA" }}>
+        <p style={{ color: "#8A7F6A" }}>Cargando...</p>
       </div>
     );
   }

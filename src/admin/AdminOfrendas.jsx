@@ -29,15 +29,15 @@ export default function AdminOfrendas() {
     }
   };
 
-  if (!config) return <p style={{ color: "#8A94A6" }}>Cargando...</p>;
+  if (!config) return <p style={{ color: "#8A7F6A" }}>Cargando...</p>;
 
   return (
     <form onSubmit={guardar} className="space-y-6">
       <div>
-        <h1 className="text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+        <h1 className="text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
           Ofrendas
         </h1>
-        <p className="text-[13px] mt-1" style={{ color: "#8A94A6" }}>
+        <p className="text-[13px] mt-1" style={{ color: "#8A7F6A" }}>
           Si completás un link, va a aparecer un botón para colaborar en el sitio. Si lo dejás vacío, no se muestra nada.
         </p>
       </div>

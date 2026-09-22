@@ -140,8 +140,8 @@ function FormularioItem({ categoria, item, onCerrar, onGuardado }) {
       <form onSubmit={guardar} className="space-y-4">
         {error && <Alerta>{error}</Alerta>}
         {formularioPorTipo(categoria.tipo, valores, set)}
-        <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-          <label className="flex items-center gap-2 text-[13px]" style={{ color: "#B7BFCC" }}>
+        <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+          <label className="flex items-center gap-2 text-[13px]" style={{ color: "#5C5240" }}>
             <Interruptor activo={valores.publicado} onChange={(v) => set({ publicado: v })} />
             Publicado (visible en el sitio)
           </label>
@@ -202,7 +202,7 @@ export default function AdminItems() {
   };
 
   if (categoria === null && items === null && !error) {
-    return <p style={{ color: "#8A94A6" }}>Cargando...</p>;
+    return <p style={{ color: "#8A7F6A" }}>Cargando...</p>;
   }
 
   if (!categoria) {
@@ -218,13 +218,13 @@ export default function AdminItems() {
 
   return (
     <div className="space-y-6">
-      <Link to="/admin/categorias" className="flex items-center gap-1 text-[12px]" style={{ color: "#8A94A6" }}>
+      <Link to="/admin/categorias" className="flex items-center gap-1 text-[12px]" style={{ color: "#8A7F6A" }}>
         <ChevronLeft size={14} />
         Categorías
       </Link>
 
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+        <h1 className="text-2xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
           {categoria.nombre}
         </h1>
         <Boton
@@ -242,7 +242,7 @@ export default function AdminItems() {
 
       <div className="space-y-2">
         {items?.length === 0 && (
-          <p className="text-[13px] py-8 text-center" style={{ color: "#5A6272" }}>
+          <p className="text-[13px] py-8 text-center" style={{ color: "#A89A82" }}>
             Todavía no hay publicaciones en esta categoría.
           </p>
         )}
@@ -250,10 +250,10 @@ export default function AdminItems() {
           <Tarjeta key={item.id} className="flex items-center gap-4">
             <Interruptor activo={item.publicado} onChange={() => alternarPublicado(item)} />
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] font-medium truncate" style={{ color: "#F2ECDD" }}>
+              <p className="text-[14px] font-medium truncate" style={{ color: "#2A2620" }}>
                 {item.titulo}
               </p>
-              <div className="flex items-center gap-3 text-[11px] mt-0.5" style={{ color: "#5A6272" }}>
+              <div className="flex items-center gap-3 text-[11px] mt-0.5" style={{ color: "#A89A82" }}>
                 {item.fecha && (
                   <span className="flex items-center gap-1">
                     <Clock size={11} />
@@ -276,10 +276,10 @@ export default function AdminItems() {
               }}
               aria-label="Editar"
             >
-              <Pencil size={16} style={{ color: "#5A6272" }} />
+              <Pencil size={16} style={{ color: "#A89A82" }} />
             </button>
             <button onClick={() => eliminar(item)} aria-label="Eliminar">
-              <Trash2 size={16} style={{ color: "#5A6272" }} />
+              <Trash2 size={16} style={{ color: "#A89A82" }} />
             </button>
           </Tarjeta>
         ))}

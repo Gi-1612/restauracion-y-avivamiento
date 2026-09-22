@@ -25,14 +25,14 @@ export default function AdminSetup({ onAutenticado }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5" style={{ backgroundColor: "#12151C" }}>
+    <div className="min-h-screen flex items-center justify-center px-5" style={{ backgroundColor: "#FAF5EA" }}>
       <form onSubmit={enviar} className="w-full max-w-sm space-y-5">
         <div className="flex flex-col items-center gap-2 text-center">
           <Sparkles size={28} style={{ color: "#E8A33D" }} />
-          <h1 className="text-xl" style={{ color: "#F2ECDD", fontFamily: "'Lora', serif" }}>
+          <h1 className="text-xl" style={{ color: "#2A2620", fontFamily: "'Lora', serif" }}>
             Creá el primer administrador
           </h1>
-          <p className="text-[13px]" style={{ color: "#8A94A6" }}>
+          <p className="text-[13px]" style={{ color: "#8A7F6A" }}>
             Esta pantalla solo funciona una vez. Después vas a poder invitar a más
             personas desde el panel.
           </p>
