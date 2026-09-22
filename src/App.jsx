@@ -237,22 +237,33 @@ function Encabezado({ categorias }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   return (
     <header className="sticky top-0 z-40 backdrop-blur border-b" style={{ backgroundColor: "rgba(250,245,234,0.9)", borderColor: "rgba(0,0,0,0.06)" }}>
-      <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
-        <a href="#top" className="flex items-center gap-2">
+      <div className="max-w-6xl mx-auto px-5 h-20 md:h-16 flex items-center">
+        {/* Mobile: logo centrado con el menú a la derecha */}
+        <div className="md:hidden grid grid-cols-[32px_1fr_32px] items-center w-full">
+          <div />
+          <a href="#top" className="justify-self-center">
+            <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-14 w-auto object-contain" style={{ filter: "invert(1)" }} />
+          </a>
+          <button
+            className="justify-self-end"
+            onClick={() => setMenuAbierto(!menuAbierto)}
+            aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
+          >
+            {menuAbierto ? <X size={22} style={{ color: "#2A2620" }} /> : <Menu size={22} style={{ color: "#2A2620" }} />}
+          </button>
+        </div>
+
+        {/* Desktop: logo a la izquierda + nav */}
+        <a href="#top" className="hidden md:flex items-center gap-2">
           <img src={LOGO_IGLESIA} alt="Restauración y Avivamiento" className="h-9 w-auto object-contain" style={{ filter: "invert(1)" }} />
         </a>
-
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-8 ml-auto">
           {categorias.map((c) => (
             <a key={c.slug} href={`#cat-${c.slug}`} className="text-[13px] font-medium tracking-wide" style={{ color: "#5C5240" }}>
               {c.nombre}
             </a>
           ))}
         </nav>
-
-        <button className="md:hidden" onClick={() => setMenuAbierto(!menuAbierto)} aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}>
-          {menuAbierto ? <X size={22} style={{ color: "#2A2620" }} /> : <Menu size={22} style={{ color: "#2A2620" }} />}
-        </button>
       </div>
 
       {menuAbierto && (
