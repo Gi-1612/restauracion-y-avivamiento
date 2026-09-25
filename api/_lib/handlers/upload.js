@@ -24,7 +24,15 @@ export default async function handler(req, res) {
       body: req.body,
       request: req,
       onBeforeGenerateToken: async () => ({
-        allowedContentTypes: ["image/png", "image/jpeg", "image/webp", "image/gif", "image/avif"],
+        allowedContentTypes: [
+          "image/png",
+          "image/jpeg",
+          "image/webp",
+          "image/gif",
+          "image/avif",
+          "image/heic",
+          "image/heif",
+        ],
         addRandomSuffix: true,
         maximumSizeInBytes: 8 * 1024 * 1024,
       }),
